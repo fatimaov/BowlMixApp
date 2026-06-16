@@ -9,7 +9,8 @@ This backend is an API-only Flask service for BowlMix. It does not serve the Rea
    - with Pipenv: `pipenv install`
    - or with pip: `pip install flask flask-cors flask-sqlalchemy flask-migrate flask-jwt-extended python-dotenv psycopg2-binary`
 3. Copy `.env.example` to `.env` and update values as needed.
-4. Start the API from the `backend/` directory:
+4. Create a local PostgreSQL database for BowlMix.
+5. Start the API from the `backend/` directory:
    - `python run.py`
 
 ## Environment variables
@@ -18,10 +19,12 @@ This backend is an API-only Flask service for BowlMix. It does not serve the Rea
 - `FLASK_ENV`: environment name such as `development`
 - `SECRET_KEY`: Flask secret key
 - `JWT_SECRET_KEY`: JWT signing key
-- `DATABASE_URL`: SQLAlchemy connection string
+- `DATABASE_URL`: PostgreSQL SQLAlchemy connection string such as `postgresql://username:password@localhost:5432/bowlmix`
 - `CORS_ORIGINS`: comma-separated allowed frontend origins
 
 ## Database and migrations
+
+PostgreSQL is the only supported database for the backend.
 
 Flask-SQLAlchemy and Flask-Migrate are configured, but no models or migrations exist yet.
 

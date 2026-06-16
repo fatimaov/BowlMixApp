@@ -17,10 +17,30 @@ This backend is an API-only Flask service for BowlMix. It does not serve the Rea
 
 - `FLASK_APP`: Flask entry point, defaults to `run.py`
 - `FLASK_ENV`: environment name such as `development`
-- `SECRET_KEY`: Flask secret key
+- `FLASK_SECRET_KEY`: BowlMix environment variable for the Flask app secret
 - `JWT_SECRET_KEY`: JWT signing key
 - `DATABASE_URL`: PostgreSQL SQLAlchemy connection string such as `postgresql://username:password@localhost:5432/bowlmix`
 - `CORS_ORIGINS`: comma-separated allowed frontend origins
+
+## Secret key mapping
+
+BowlMix uses `FLASK_SECRET_KEY` as the environment variable name.
+
+Flask still expects the secret in the configuration key `SECRET_KEY`.
+
+The backend maps:
+
+```txt
+FLASK_SECRET_KEY -> Config.SECRET_KEY -> Flask SECRET_KEY
+```
+
+Example:
+
+```env
+FLASK_SECRET_KEY=your-flask-secret-key
+JWT_SECRET_KEY=your-jwt-secret-key
+DATABASE_URL=postgresql://username:password@localhost:5432/bowlmix
+```
 
 ## Database and migrations
 

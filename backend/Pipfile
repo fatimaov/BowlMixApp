@@ -12,5 +12,12 @@ flask-jwt-extended = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
 
+[scripts]
+start = "python run.py"
+init = "flask --app run.py db init"
+migrate = "flask --app run.py db migrate"
+upgrade = "flask --app run.py db upgrade"
+downgrade = "flask --app run.py db downgrade"
+
 [requires]
 python_version = "3.13"

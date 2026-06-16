@@ -11,7 +11,7 @@ This backend is an API-only Flask service for BowlMix. It does not serve the Rea
 3. Copy `.env.example` to `.env` and update values as needed.
 4. Create a local PostgreSQL database for BowlMix.
 5. Start the API from the `backend/` directory:
-   - `python run.py`
+   - `pipenv run start`
 
 ## Environment variables
 
@@ -51,10 +51,24 @@ Flask-SQLAlchemy and Flask-Migrate are configured, but no models or migrations e
 When models are added later, initialize migrations from `backend/`:
 
 ```bash
-flask db init
-flask db migrate -m "Initial schema"
-flask db upgrade
+pipenv run init
+pipenv run migrate --message "Initial schema"
+pipenv run upgrade
 ```
+
+## Common Commands
+
+Run these from `backend/`:
+
+```bash
+pipenv run start
+pipenv run init
+pipenv run migrate
+pipenv run upgrade
+pipenv run downgrade
+```
+
+The migration commands use `flask --app run.py ...` under the hood so Flask can find the current app factory setup directly from `run.py` without depending on a separately exported `FLASK_APP` value in your shell.
 
 ## Health check
 

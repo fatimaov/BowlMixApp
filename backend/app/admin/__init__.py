@@ -1,1 +1,8 @@
-# Admin utilities are optional and can be added later.
+from flask_admin import Admin
+
+
+admin = Admin(name="BowlMix Admin")
+
+
+def setup_admin(app):
+    admin.init_app(app)

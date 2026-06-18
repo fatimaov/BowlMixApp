@@ -1,0 +1,51 @@
+CATEGORIES = [
+    {
+        "name": "Bases",
+        "slug": "bases",
+        "color_key": "--cat-bases",
+        "shape_family": "grains",
+        "sort_order": 1,
+    },
+    {
+        "name": "Proteins",
+        "slug": "proteins",
+        "color_key": "--cat-proteins",
+        "shape_family": "blocks",
+        "sort_order": 2,
+    },
+    {
+        "name": "Vegetables",
+        "slug": "vegetables",
+        "color_key": "--cat-vegetables",
+        "shape_family": "blobs",
+        "sort_order": 3,
+    },
+    {
+        "name": "Toppings",
+        "slug": "toppings",
+        "color_key": "--cat-toppings",
+        "shape_family": "tokens",
+        "sort_order": 4,
+    },
+    {
+        "name": "Crunch",
+        "slug": "crunch",
+        "color_key": "--cat-crunch",
+        "shape_family": "flakes",
+        "sort_order": 5,
+    },
+    {
+        "name": "Sauces",
+        "slug": "sauces",
+        "color_key": "--cat-sauces",
+        "shape_family": "drizzles",
+        "sort_order": 6,
+    },
+    {
+        "name": "Extras",
+        "slug": "extras",
+        "color_key": "--cat-extras",
+        "shape_family": "sparks",
+        "sort_order": 7,
+    },
+]

@@ -1,0 +1,17 @@
+DEFAULT_INGREDIENTS = [
+    {"category_slug": "bases", "name": "rice", "visual_pattern": "solid"},
+    {"category_slug": "bases", "name": "quinoa", "visual_pattern": "dots"},
+    {"category_slug": "proteins", "name": "chicken", "visual_pattern": "solid"},
+    {"category_slug": "proteins", "name": "tofu", "visual_pattern": "grid"},
+    {"category_slug": "proteins", "name": "salmon", "visual_pattern": "stripes"},
+    {"category_slug": "vegetables", "name": "cucumber", "visual_pattern": "solid"},
+    {"category_slug": "vegetables", "name": "avocado", "visual_pattern": "split"},
+    {"category_slug": "vegetables", "name": "edamame", "visual_pattern": "dots"},
+    {"category_slug": "vegetables", "name": "carrot", "visual_pattern": "stripes"},
+    {"category_slug": "toppings", "name": "sesame seeds", "visual_pattern": "dots"},
+    {"category_slug": "toppings", "name": "pickled onion", "visual_pattern": "ring"},
+    {"category_slug": "crunch", "name": "crispy onions", "visual_pattern": "speckled"},
+    {"category_slug": "sauces", "name": "soy sauce", "visual_pattern": "solid"},
+    {"category_slug": "sauces", "name": "spicy mayo", "visual_pattern": "stripes"},
+    {"category_slug": "extras", "name": "lime", "visual_pattern": "split"},
+]

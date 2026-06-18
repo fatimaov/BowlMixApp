@@ -12,6 +12,7 @@ flask-jwt-extended = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
 sqlalchemy = "*"
+flask-admin = "*"
 
 [scripts]
 start = "python run.py"

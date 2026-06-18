@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from sqlalchemy import DateTime, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.config.extensions import db
 
@@ -17,4 +17,9 @@ class User(db.Model):
         DateTime,
         nullable=False,
         default=lambda: datetime.now(timezone.utc),
+    )
+
+    user_ingredients: Mapped[list["UserIngredient"]] = relationship(
+        "UserIngredient",
+        back_populates="user",
     )

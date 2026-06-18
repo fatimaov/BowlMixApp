@@ -27,3 +27,7 @@ class Ingredient(db.Model):
         "IngredientCategory",
         back_populates="ingredients",
     )
+    user_ingredients: Mapped[list["UserIngredient"]] = relationship(
+        "UserIngredient",
+        back_populates="ingredient",
+    )

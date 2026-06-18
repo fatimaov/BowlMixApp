@@ -11,6 +11,7 @@ flask-migrate = "*"
 flask-jwt-extended = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
+sqlalchemy = "*"
 
 [scripts]
 start = "python run.py"
@@ -21,3 +22,5 @@ downgrade = "flask --app run.py db downgrade"
 
 [requires]
 python_version = "3.13"
+
+[dev-packages]

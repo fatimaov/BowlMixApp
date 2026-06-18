@@ -3,6 +3,7 @@ from flask import Flask
 from app.config.extensions import init_extensions
 from app.config.settings import Config
 from app.routes import register_blueprints
+from app.models import __all__
 
 
 def create_app(config_object=Config):

@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Integer, String
+from sqlalchemy import Boolean, DateTime, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.config.extensions import db
@@ -18,6 +18,7 @@ class User(db.Model):
         nullable=False,
         default=lambda: datetime.now(timezone.utc),
     )
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
     user_ingredients: Mapped[list["UserIngredient"]] = relationship(
         "UserIngredient",

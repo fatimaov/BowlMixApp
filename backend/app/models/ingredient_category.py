@@ -1,5 +1,5 @@
 from sqlalchemy import Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.config.extensions import db
 
@@ -13,3 +13,8 @@ class IngredientCategory(db.Model):
     color_key: Mapped[str] = mapped_column(String(50), nullable=False)
     shape_family: Mapped[str] = mapped_column(String(50), nullable=False)
     sort_order: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    ingredients: Mapped[list["Ingredient"]] = relationship(
+        "Ingredient",
+        back_populates="category",
+    )

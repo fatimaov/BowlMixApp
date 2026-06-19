@@ -1,6 +1,7 @@
 import random
 from collections import defaultdict
 
+from app.services.bowl_name_service import generate_bowl_name
 from app.services.bowl_validation_service import (
     CATEGORY_RULES,
     get_ingredient_category_key,
@@ -33,7 +34,7 @@ def generate_generate_mode_bowls(
     )
 
     bowls = []
-    for bowl_number in range(1, 4):
+    for _ in range(3):
         bowl_ingredients = {}
 
         for category_key, rules in CATEGORY_RULES.items():
@@ -52,10 +53,12 @@ def generate_generate_mode_bowls(
                 serialize_ingredient(ingredient) for ingredient in selected_ingredients
             ]
 
+        bowl = {"ingredients": bowl_ingredients}
+        bowl["name"] = generate_bowl_name(bowl)
         bowls.append(
             {
-                "name": f"Demo Bowl {bowl_number}",
-                "ingredients": bowl_ingredients,
+                "name": bowl["name"],
+                "ingredients": bowl["ingredients"],
             }
         )
 

@@ -30,6 +30,29 @@ def validate_generation_inputs(
     validate_required_categories(ingredients_by_category)
 
 
+def validate_bowl_composition(ingredients_by_category):
+    for category_key in ingredients_by_category:
+        if category_key not in CATEGORY_RULES:
+            raise ValueError(f"Unsupported ingredient category: {category_key}.")
+
+    for category_key, rules in CATEGORY_RULES.items():
+        ingredient_count = len(ingredients_by_category.get(category_key, []))
+        min_count = rules["min"]
+        max_count = rules["max"]
+
+        if ingredient_count < min_count:
+            raise ValueError(
+                f"Not enough ingredients for {category_key}: "
+                f"{ingredient_count} selected, minimum is {min_count}."
+            )
+
+        if ingredient_count > max_count:
+            raise ValueError(
+                f"Too many ingredients for {category_key}: "
+                f"{ingredient_count} selected, maximum is {max_count}."
+            )
+
+
 def validate_locked_ingredient_limits(locked_ingredients_by_category):
     for category_key, locked_ingredients in locked_ingredients_by_category.items():
         if category_key not in CATEGORY_RULES:

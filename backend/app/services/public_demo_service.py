@@ -17,4 +17,8 @@ def generate_public_demo_bowls():
     )
     ingredient_pool = db.session.execute(statement).scalars().all()
 
-    return generate_generate_mode_bowls(ingredient_pool)
+    return generate_generate_mode_bowls(
+        ingredient_pool,
+        locked_ingredients=[],
+        excluded_ingredients=[],
+    )

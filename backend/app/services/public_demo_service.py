@@ -3,7 +3,7 @@ from sqlalchemy.orm import joinedload
 
 from app.config.extensions import db
 from app.models import Ingredient
-from app.services.bowl_generation_service import generate_generate_mode_bowls
+from app.services.generate_mode_service import generate_generate_mode_bowls
 
 
 def generate_public_demo_bowls():

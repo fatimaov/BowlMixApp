@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -23,6 +24,7 @@ def get_database_url():
 class Config:
     SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "dev-flask-secret-key")
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "dev-jwt-secret-key")
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=30)
     SQLALCHEMY_DATABASE_URI = get_database_url()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CORS_ORIGINS = [

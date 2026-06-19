@@ -17,7 +17,11 @@ _models_registered = False
 
 
 class BaseModelView(ModelView):
-    pass
+    column_display_pk = True
+
+    def scaffold_list_columns(self):
+        columns = super().scaffold_list_columns()
+        return ["id", *[column for column in columns if column != "id"]]
 
 
 def register_model_views():

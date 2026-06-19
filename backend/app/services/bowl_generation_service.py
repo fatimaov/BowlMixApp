@@ -1,7 +1,7 @@
 import random
 from collections import defaultdict
 
-from app.services.bowl_name_service import generate_bowl_name
+from app.services.bowl_name_service import generate_unique_bowl_name
 from app.services.bowl_validation_service import (
     CATEGORY_RULES,
     get_ingredient_category_key,
@@ -34,6 +34,7 @@ def generate_generate_mode_bowls(
     )
 
     bowls = []
+    used_names = set()
     for _ in range(3):
         bowl_ingredients = {}
 
@@ -54,7 +55,8 @@ def generate_generate_mode_bowls(
             ]
 
         bowl = {"ingredients": bowl_ingredients}
-        bowl["name"] = generate_bowl_name(bowl)
+        bowl["name"] = generate_unique_bowl_name(bowl, used_names)
+        used_names.add(bowl["name"])
         bowls.append(
             {
                 "name": bowl["name"],

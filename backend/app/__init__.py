@@ -5,7 +5,9 @@ from app.commands import register_commands
 from app.config.extensions import init_extensions
 from app.config.settings import Config
 from app.routes import register_blueprints
-from app.models import __all__
+
+# Import models so Flask-Migrate and SQLAlchemy know every mapped table.
+from app import models
 
 
 def create_app(config_object=Config):

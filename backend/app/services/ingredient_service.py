@@ -241,6 +241,7 @@ def serialize_ingredient_for_selector(ingredient, user_ingredient=None):
     return serialize_ingredient(
         ingredient,
         user_ingredient=user_ingredient,
+        can_toggle_availability=True,
         selectable=is_available,
     )
 

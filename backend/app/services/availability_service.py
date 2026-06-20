@@ -1,5 +1,4 @@
 from sqlalchemy import and_, or_, select
-from sqlalchemy.orm import joinedload
 
 from app.config.extensions import db
 from app.models import Ingredient, UserIngredient
@@ -21,7 +20,7 @@ def set_ingredient_availability(user_id, ingredient_id, is_available):
     user_ingredient.is_available = is_available
     db.session.commit()
 
-    return serialize_availability(user_ingredient, ingredient)
+    return serialize_availability(user_ingredient)
 
 
 def get_active_available_scope_ingredient(user_id, ingredient_id):
@@ -38,7 +37,6 @@ def get_active_available_scope_ingredient(user_id, ingredient_id):
                 ),
             ),
         )
-        .options(joinedload(Ingredient.category))
     )
     ingredient = db.session.execute(statement).scalar_one_or_none()
 
@@ -61,14 +59,10 @@ def validate_is_available(is_available):
         raise ValueError("Availability must be a boolean.")
 
 
-def serialize_availability(user_ingredient, ingredient):
+def serialize_availability(user_ingredient):
     return {
-        "ingredient_id": ingredient.id,
+        "ingredient_id": user_ingredient.ingredient_id,
         "user_id": user_ingredient.user_id,
         "is_available": user_ingredient.is_available,
-        "ingredient_name": ingredient.name,
-        "category": {
-            "id": ingredient.category.id,
-            "slug": ingredient.category.slug,
-        },
+        "selectable": user_ingredient.is_available,
     }

@@ -22,5 +22,10 @@ class SavedBowl(db.Model):
         nullable=False,
         default=lambda: datetime.now(timezone.utc),
     )
+    deleted_at: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        nullable=True,
+        default=None,
+    )
 
     user: Mapped["User"] = relationship("User")

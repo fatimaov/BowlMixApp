@@ -32,6 +32,7 @@ Not implemented yet:
 
 - `FLASK_APP`: Flask entry point
 - `FLASK_ENV`: environment label
+- `ENABLE_ADMIN`: set to a truthy value like `1` or `true` to expose Flask-Admin only when `FLASK_ENV=development`
 - `FLASK_SECRET_KEY`: app secret used by Flask through `Config.SECRET_KEY`
 - `JWT_SECRET_KEY`: JWT signing key
 - `DATABASE_URL`: PostgreSQL SQLAlchemy connection string
@@ -58,6 +59,7 @@ pipenv install
 ```env
 FLASK_APP=run.py
 FLASK_ENV=development
+ENABLE_ADMIN=true
 FLASK_SECRET_KEY=your-flask-secret-key
 JWT_SECRET_KEY=change-me-too
 DATABASE_URL=postgresql://username:password@localhost:5432/bowlmix

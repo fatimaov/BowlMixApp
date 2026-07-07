@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 
 from app.admin import setup_admin
@@ -14,7 +15,12 @@ def create_app(config_object=Config):
     app = Flask(__name__)
     app.config.from_object(config_object)
 
-    setup_admin(app)
+    enable_admin = os.getenv("ENABLE_ADMIN", "").strip().lower() in {"1", "true", "yes", "on"}
+    is_development = os.getenv("FLASK_ENV", "").strip().lower() == "development"
+
+    if enable_admin and is_development:
+        setup_admin(app)
+
     register_commands(app)
     init_extensions(app)
     register_blueprints(app)

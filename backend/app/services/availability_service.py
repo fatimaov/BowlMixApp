@@ -24,19 +24,16 @@ def set_ingredient_availability(user_id, ingredient_id, is_available):
 
 
 def get_active_available_scope_ingredient(user_id, ingredient_id):
-    statement = (
-        select(Ingredient)
-        .where(
-            Ingredient.id == ingredient_id,
-            Ingredient.is_active.is_(True),
-            or_(
-                Ingredient.is_default.is_(True),
-                and_(
-                    Ingredient.is_default.is_(False),
-                    Ingredient.creator_user_id == user_id,
-                ),
+    statement = select(Ingredient).where(
+        Ingredient.id == ingredient_id,
+        Ingredient.is_active.is_(True),
+        or_(
+            Ingredient.is_default.is_(True),
+            and_(
+                Ingredient.is_default.is_(False),
+                Ingredient.creator_user_id == user_id,
             ),
-        )
+        ),
     )
     ingredient = db.session.execute(statement).scalar_one_or_none()
 

@@ -1,6 +1,5 @@
 import random
 
-
 NAME_ADJECTIVES = (
     "Bright",
     "Crisp",
@@ -74,7 +73,5 @@ def generate_rule_based_bowl_name(bowl):
 
 def build_possible_names():
     return [
-        f"{adjective} {noun}"
-        for adjective in NAME_ADJECTIVES
-        for noun in NAME_NOUNS
+        f"{adjective} {noun}" for adjective in NAME_ADJECTIVES for noun in NAME_NOUNS
     ]

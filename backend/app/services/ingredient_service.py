@@ -97,6 +97,52 @@ def get_ingredient_selector_options(user_id, category_id, search=None):
     )
 
 
+def get_active_available_ingredients_for_user(user_id, ingredient_ids):
+    normalized_ingredient_ids = normalize_selected_ingredient_ids(ingredient_ids)
+    if not normalized_ingredient_ids:
+        return []
+
+    statement = (
+        select(Ingredient, UserIngredient)
+        .outerjoin(
+            UserIngredient,
+            and_(
+                UserIngredient.ingredient_id == Ingredient.id,
+                UserIngredient.user_id == user_id,
+            ),
+        )
+        .where(
+            Ingredient.id.in_(normalized_ingredient_ids),
+            Ingredient.is_active.is_(True),
+            or_(
+                Ingredient.is_default.is_(True),
+                Ingredient.creator_user_id == user_id,
+            ),
+        )
+        .options(joinedload(Ingredient.category))
+    )
+
+    rows = db.session.execute(statement).all()
+    available_ingredients_by_id = {
+        ingredient.id: ingredient
+        for ingredient, user_ingredient in rows
+        if get_is_available(ingredient, user_ingredient)
+    }
+    unavailable_ids = [
+        ingredient_id
+        for ingredient_id in normalized_ingredient_ids
+        if ingredient_id not in available_ingredients_by_id
+    ]
+
+    if unavailable_ids:
+        raise ValueError("Selected ingredients include unavailable or invalid items.")
+
+    return [
+        available_ingredients_by_id[ingredient_id]
+        for ingredient_id in normalized_ingredient_ids
+    ]
+
+
 def create_custom_ingredient(user_id, data):
     data = data or {}
     name = validate_ingredient_name(data.get("name"))
@@ -305,6 +351,28 @@ def validate_ingredient_name(name):
         raise ValueError("Ingredient name is required.")
 
     return normalized_name
+
+
+def normalize_selected_ingredient_ids(ingredient_ids):
+    if ingredient_ids is None:
+        return []
+
+    if not isinstance(ingredient_ids, list):
+        raise ValueError("Selected ingredients must be a list.")
+
+    normalized_ingredient_ids = []
+    for ingredient_id in ingredient_ids:
+        try:
+            normalized_ingredient_id = int(ingredient_id)
+        except (TypeError, ValueError):
+            raise ValueError("Selected ingredients contain an invalid ingredient.") from None
+
+        normalized_ingredient_ids.append(normalized_ingredient_id)
+
+    if len(normalized_ingredient_ids) != len(set(normalized_ingredient_ids)):
+        raise ValueError("Selected ingredients contain duplicates.")
+
+    return normalized_ingredient_ids
 
 
 def normalize_ingredient_name(name):

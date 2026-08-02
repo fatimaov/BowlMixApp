@@ -5,18 +5,10 @@ from sqlalchemy.orm import joinedload
 
 from app.config.extensions import db
 from app.models import Ingredient, IngredientCategory, UserIngredient
+from app.models.ingredient import APPROVED_VISUAL_PATTERNS
 from app.services.availability_service import set_ingredient_availability
 
 MIN_SEARCH_LENGTH = 3
-APPROVED_CUSTOM_VISUAL_PATTERNS = (
-    "solid",
-    "dots",
-    "stripes",
-    "grid",
-    "speckled",
-    "ring",
-    "split",
-)
 
 
 def get_user_ingredients(user_id, search=None):
@@ -483,7 +475,7 @@ def normalize_ingredient_name(name):
 
 
 def select_random_custom_visual_pattern():
-    return random.choice(APPROVED_CUSTOM_VISUAL_PATTERNS)
+    return random.choice(APPROVED_VISUAL_PATTERNS)
 
 
 def normalize_search(search):

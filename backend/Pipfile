@@ -27,3 +27,4 @@ downgrade = "flask --app run.py db downgrade"
 python_version = "3.13"
 
 [dev-packages]
+black = "*"

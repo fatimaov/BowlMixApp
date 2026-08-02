@@ -7,7 +7,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app.config.extensions import db
 from app.models import User
 
-
 MIN_USERNAME_LENGTH = 3
 MIN_PASSWORD_LENGTH = 8
 INVALID_CREDENTIALS_MESSAGE = "Invalid email or password."

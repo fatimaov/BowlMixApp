@@ -15,7 +15,12 @@ def create_app(config_object=Config):
     app = Flask(__name__)
     app.config.from_object(config_object)
 
-    enable_admin = os.getenv("ENABLE_ADMIN", "").strip().lower() in {"1", "true", "yes", "on"}
+    enable_admin = os.getenv("ENABLE_ADMIN", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
     is_development = os.getenv("FLASK_ENV", "").strip().lower() == "development"
 
     if enable_admin and is_development:

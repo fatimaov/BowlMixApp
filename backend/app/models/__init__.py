@@ -5,7 +5,6 @@ from app.models.user_ingredient import UserIngredient
 from app.models.saved_bowl import SavedBowl
 from app.models.saved_bowl_ingredient import SavedBowlIngredient
 
-
 __all__ = [
     "Ingredient",
     "IngredientCategory",

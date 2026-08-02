@@ -11,7 +11,6 @@ from app.models import (
     UserIngredient,
 )
 
-
 admin = Admin(name="BowlMix Admin")
 _models_registered = False
 

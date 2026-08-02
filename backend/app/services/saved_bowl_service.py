@@ -10,7 +10,6 @@ from app.services.snapshot_service import (
     serialize_snapshots,
 )
 
-
 MAX_BOWL_NAME_LENGTH = 120
 
 
@@ -149,8 +148,7 @@ def extract_ingredient_ids(data):
     composition = get_bowl_composition(data)
     raw_ingredients = flatten_composition(composition)
     ingredient_ids = [
-        extract_ingredient_id(ingredient)
-        for ingredient in raw_ingredients
+        extract_ingredient_id(ingredient) for ingredient in raw_ingredients
     ]
 
     if not ingredient_ids:

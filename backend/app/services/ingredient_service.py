@@ -4,7 +4,6 @@ from sqlalchemy.orm import joinedload
 from app.config.extensions import db
 from app.models import Ingredient, IngredientCategory, UserIngredient
 
-
 MIN_SEARCH_LENGTH = 3
 DEFAULT_CUSTOM_VISUAL_PATTERN = "solid"
 

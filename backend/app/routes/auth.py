@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
 from app.services.auth_service import (
@@ -10,41 +10,16 @@ from app.services.auth_service import (
     soft_delete_user,
     update_user_profile,
 )
+from app.utils import get_json_object_payload, json_error
 
 auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.post("/auth/register")
 def register_user_route():
-    request_payload = request.get_json(silent=True)
-
-    if request_payload is None:
-        return (
-            jsonify(
-                {
-                    "success": False,
-                    "error": {
-                        "code": "INVALID_JSON",
-                        "message": "Request body must be valid JSON.",
-                    },
-                }
-            ),
-            400,
-        )
-
-    if not isinstance(request_payload, dict):
-        return (
-            jsonify(
-                {
-                    "success": False,
-                    "error": {
-                        "code": "INVALID_PAYLOAD",
-                        "message": "Request body must be a JSON object.",
-                    },
-                }
-            ),
-            400,
-        )
+    request_payload, error_response = get_json_object_payload()
+    if error_response is not None:
+        return error_response
 
     try:
         user = register_user(request_payload)
@@ -77,35 +52,9 @@ def register_user_route():
 
 @auth_bp.post("/auth/login")
 def login_user_route():
-    request_payload = request.get_json(silent=True)
-
-    if request_payload is None:
-        return (
-            jsonify(
-                {
-                    "success": False,
-                    "error": {
-                        "code": "INVALID_JSON",
-                        "message": "Request body must be valid JSON.",
-                    },
-                }
-            ),
-            400,
-        )
-
-    if not isinstance(request_payload, dict):
-        return (
-            jsonify(
-                {
-                    "success": False,
-                    "error": {
-                        "code": "INVALID_PAYLOAD",
-                        "message": "Request body must be a JSON object.",
-                    },
-                }
-            ),
-            400,
-        )
+    request_payload, error_response = get_json_object_payload()
+    if error_response is not None:
+        return error_response
 
     try:
         user = login_user(request_payload)
@@ -182,52 +131,17 @@ def get_current_user_route():
 @auth_bp.patch("/auth/me")
 @jwt_required()
 def update_current_user_route():
-    request_payload = request.get_json(silent=True)
-
-    if request_payload is None:
-        return (
-            jsonify(
-                {
-                    "success": False,
-                    "error": {
-                        "code": "INVALID_JSON",
-                        "message": "Request body must be valid JSON.",
-                    },
-                }
-            ),
-            400,
-        )
-
-    if not isinstance(request_payload, dict):
-        return (
-            jsonify(
-                {
-                    "success": False,
-                    "error": {
-                        "code": "INVALID_PAYLOAD",
-                        "message": "Request body must be a JSON object.",
-                    },
-                }
-            ),
-            400,
-        )
+    request_payload, error_response = get_json_object_payload()
+    if error_response is not None:
+        return error_response
 
     current_user_id = get_jwt_identity()
 
     if request_payload.get("is_active") is False:
         if len(request_payload) != 1:
-            return (
-                jsonify(
-                    {
-                        "success": False,
-                        "error": {
-                            "code": "INVALID_PAYLOAD",
-                            "message": (
-                                "Soft delete requests may only include is_active."
-                            ),
-                        },
-                    }
-                ),
+            return json_error(
+                "INVALID_PAYLOAD",
+                "Soft delete requests may only include is_active.",
                 400,
             )
 
@@ -260,16 +174,9 @@ def update_current_user_route():
         )
 
     if "is_active" in request_payload:
-        return (
-            jsonify(
-                {
-                    "success": False,
-                    "error": {
-                        "code": "INVALID_PAYLOAD",
-                        "message": "is_active may only be set to false for soft delete.",
-                    },
-                }
-            ),
+        return json_error(
+            "INVALID_PAYLOAD",
+            "is_active may only be set to false for soft delete.",
             400,
         )
 

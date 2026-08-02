@@ -97,32 +97,32 @@ def get_ingredient_selector_options(user_id, category_id, search=None):
     )
 
 
+def get_active_available_ingredient_pool_for_user(user_id):
+    rows = get_active_available_ingredient_rows_for_user(user_id)
+    ingredients = [
+        ingredient
+        for ingredient, user_ingredient in rows
+        if get_is_available(ingredient, user_ingredient)
+    ]
+
+    return sorted(
+        ingredients,
+        key=lambda ingredient: (
+            ingredient.category.sort_order,
+            ingredient.name.lower(),
+        ),
+    )
+
+
 def get_active_available_ingredients_for_user(user_id, ingredient_ids):
     normalized_ingredient_ids = normalize_selected_ingredient_ids(ingredient_ids)
     if not normalized_ingredient_ids:
         return []
 
-    statement = (
-        select(Ingredient, UserIngredient)
-        .outerjoin(
-            UserIngredient,
-            and_(
-                UserIngredient.ingredient_id == Ingredient.id,
-                UserIngredient.user_id == user_id,
-            ),
-        )
-        .where(
-            Ingredient.id.in_(normalized_ingredient_ids),
-            Ingredient.is_active.is_(True),
-            or_(
-                Ingredient.is_default.is_(True),
-                Ingredient.creator_user_id == user_id,
-            ),
-        )
-        .options(joinedload(Ingredient.category))
+    rows = get_active_available_ingredient_rows_for_user(
+        user_id,
+        ingredient_ids=normalized_ingredient_ids,
     )
-
-    rows = db.session.execute(statement).all()
     available_ingredients_by_id = {
         ingredient.id: ingredient
         for ingredient, user_ingredient in rows
@@ -245,6 +245,32 @@ def get_user_ingredient(user_id, ingredient_id):
         UserIngredient.ingredient_id == ingredient_id,
     )
     return db.session.execute(statement).scalar_one_or_none()
+
+
+def get_active_available_ingredient_rows_for_user(user_id, ingredient_ids=None):
+    statement = (
+        select(Ingredient, UserIngredient)
+        .outerjoin(
+            UserIngredient,
+            and_(
+                UserIngredient.ingredient_id == Ingredient.id,
+                UserIngredient.user_id == user_id,
+            ),
+        )
+        .where(
+            Ingredient.is_active.is_(True),
+            or_(
+                Ingredient.is_default.is_(True),
+                Ingredient.creator_user_id == user_id,
+            ),
+        )
+        .options(joinedload(Ingredient.category))
+    )
+
+    if ingredient_ids is not None:
+        statement = statement.where(Ingredient.id.in_(ingredient_ids))
+
+    return db.session.execute(statement).all()
 
 
 def validate_unique_visible_ingredient_name(

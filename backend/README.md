@@ -156,3 +156,9 @@ This keeps saved bowls stable even if ingredients, categories, or visual metadat
 ## Admin
 
 Flask-Admin is available for local model inspection once the app is running. Registered models include users, ingredient categories, ingredients, user ingredient availability records, saved bowls, and saved bowl ingredient snapshots.
+
+## Recent Implementation Summary
+
+- Added `POST /api/demo/bowls/generate` for public demo bowl generation with active default ingredients.
+- Added auth routes for `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`, and `PATCH /api/auth/me`.
+- Added Black as a backend dev package and applied formatting updates.

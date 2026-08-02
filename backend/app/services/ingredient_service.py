@@ -1,11 +1,22 @@
+import random
+
 from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import joinedload
 
 from app.config.extensions import db
 from app.models import Ingredient, IngredientCategory, UserIngredient
+from app.services.availability_service import set_ingredient_availability
 
 MIN_SEARCH_LENGTH = 3
-DEFAULT_CUSTOM_VISUAL_PATTERN = "solid"
+APPROVED_CUSTOM_VISUAL_PATTERNS = (
+    "solid",
+    "dots",
+    "stripes",
+    "grid",
+    "speckled",
+    "ring",
+    "split",
+)
 
 
 def get_user_ingredients(user_id, search=None):
@@ -153,11 +164,25 @@ def create_custom_ingredient(user_id, data):
         raise ValueError("Category not found.")
 
     validate_unique_visible_ingredient_name(user_id, category.id, name)
+    reactivatable_ingredient = get_inactive_custom_ingredient_for_user_by_name(
+        user_id,
+        category.id,
+        name,
+    )
+
+    if reactivatable_ingredient is not None:
+        reactivatable_ingredient.is_active = True
+        user_ingredient = get_or_create_user_ingredient(user_id, reactivatable_ingredient.id)
+        db.session.commit()
+        return serialize_ingredient_for_management(
+            reactivatable_ingredient,
+            user_ingredient,
+        )
 
     ingredient = Ingredient(
         name=name,
         category_id=category.id,
-        visual_pattern=normalize_visual_pattern(data.get("visual_pattern")),
+        visual_pattern=select_random_custom_visual_pattern(),
         is_default=False,
         creator_user_id=user_id,
         is_active=True,
@@ -173,6 +198,25 @@ def create_custom_ingredient(user_id, data):
     db.session.add(user_ingredient)
     db.session.commit()
 
+    return serialize_ingredient_for_management(ingredient, user_ingredient)
+
+
+def create_ingredient_for_user(user_id, data):
+    data = data or {}
+    is_available = data.get("is_available")
+
+    if is_available is not None and not isinstance(is_available, bool):
+        raise ValueError("Availability must be a boolean.")
+
+    created_ingredient = create_custom_ingredient(user_id, data)
+    target_is_available = True if is_available is None else is_available
+    set_ingredient_availability(user_id, created_ingredient["id"], target_is_available)
+
+    ingredient = get_active_custom_ingredient_for_user(
+        user_id,
+        created_ingredient["id"],
+    )
+    user_ingredient = get_user_ingredient(user_id, ingredient.id)
     return serialize_ingredient_for_management(ingredient, user_ingredient)
 
 
@@ -247,6 +291,21 @@ def get_user_ingredient(user_id, ingredient_id):
     return db.session.execute(statement).scalar_one_or_none()
 
 
+def get_or_create_user_ingredient(user_id, ingredient_id):
+    user_ingredient = get_user_ingredient(user_id, ingredient_id)
+    if user_ingredient is not None:
+        return user_ingredient
+
+    user_ingredient = UserIngredient(
+        user_id=user_id,
+        ingredient_id=ingredient_id,
+        is_available=True,
+    )
+    db.session.add(user_ingredient)
+    db.session.flush()
+    return user_ingredient
+
+
 def get_active_available_ingredient_rows_for_user(user_id, ingredient_ids=None):
     statement = (
         select(Ingredient, UserIngredient)
@@ -271,6 +330,21 @@ def get_active_available_ingredient_rows_for_user(user_id, ingredient_ids=None):
         statement = statement.where(Ingredient.id.in_(ingredient_ids))
 
     return db.session.execute(statement).all()
+
+
+def get_inactive_custom_ingredient_for_user_by_name(user_id, category_id, name):
+    statement = (
+        select(Ingredient)
+        .where(
+            Ingredient.category_id == category_id,
+            Ingredient.is_active.is_(False),
+            Ingredient.is_default.is_(False),
+            Ingredient.creator_user_id == user_id,
+            func.lower(Ingredient.name) == name.lower(),
+        )
+        .options(joinedload(Ingredient.category))
+    )
+    return db.session.execute(statement).scalar_one_or_none()
 
 
 def validate_unique_visible_ingredient_name(
@@ -408,12 +482,8 @@ def normalize_ingredient_name(name):
     return str(name).strip()
 
 
-def normalize_visual_pattern(visual_pattern):
-    if visual_pattern is None:
-        return DEFAULT_CUSTOM_VISUAL_PATTERN
-
-    normalized_visual_pattern = str(visual_pattern).strip()
-    return normalized_visual_pattern or DEFAULT_CUSTOM_VISUAL_PATTERN
+def select_random_custom_visual_pattern():
+    return random.choice(APPROVED_CUSTOM_VISUAL_PATTERNS)
 
 
 def normalize_search(search):

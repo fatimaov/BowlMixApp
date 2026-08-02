@@ -2,10 +2,13 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
 from app.services.auth_service import (
+    change_user_password,
     get_user_by_id,
     login_user,
     register_user,
     serialize_user,
+    soft_delete_user,
+    update_user_profile,
 )
 
 auth_bp = Blueprint("auth", __name__)
@@ -161,6 +164,135 @@ def get_current_user_route():
                 }
             ),
             404,
+        )
+
+    return (
+        jsonify(
+            {
+                "success": True,
+                "data": {
+                    "user": serialize_user(user),
+                },
+            }
+        ),
+        200,
+    )
+
+
+@auth_bp.patch("/auth/me")
+@jwt_required()
+def update_current_user_route():
+    request_payload = request.get_json(silent=True)
+
+    if request_payload is None:
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": {
+                        "code": "INVALID_JSON",
+                        "message": "Request body must be valid JSON.",
+                    },
+                }
+            ),
+            400,
+        )
+
+    if not isinstance(request_payload, dict):
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": {
+                        "code": "INVALID_PAYLOAD",
+                        "message": "Request body must be a JSON object.",
+                    },
+                }
+            ),
+            400,
+        )
+
+    current_user_id = get_jwt_identity()
+
+    if request_payload.get("is_active") is False:
+        if len(request_payload) != 1:
+            return (
+                jsonify(
+                    {
+                        "success": False,
+                        "error": {
+                            "code": "INVALID_PAYLOAD",
+                            "message": (
+                                "Soft delete requests may only include is_active."
+                            ),
+                        },
+                    }
+                ),
+                400,
+            )
+
+        try:
+            soft_delete_user(current_user_id)
+        except ValueError as error:
+            return (
+                jsonify(
+                    {
+                        "success": False,
+                        "error": {
+                            "code": "USER_UPDATE_ERROR",
+                            "message": str(error),
+                        },
+                    }
+                ),
+                404,
+            )
+
+        return (
+            jsonify(
+                {
+                    "success": True,
+                    "data": {
+                        "message": "User deactivated successfully.",
+                    },
+                }
+            ),
+            200,
+        )
+
+    if "is_active" in request_payload:
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": {
+                        "code": "INVALID_PAYLOAD",
+                        "message": "is_active may only be set to false for soft delete.",
+                    },
+                }
+            ),
+            400,
+        )
+
+    try:
+        if "current_password" in request_payload or "new_password" in request_payload:
+            change_user_password(current_user_id, request_payload)
+
+        user = update_user_profile(current_user_id, request_payload)
+    except ValueError as error:
+        error_message = str(error)
+        status_code = 404 if error_message == "User not found." else 400
+
+        return (
+            jsonify(
+                {
+                    "success": False,
+                    "error": {
+                        "code": "USER_UPDATE_ERROR",
+                        "message": error_message,
+                    },
+                }
+            ),
+            status_code,
         )
 
     return (

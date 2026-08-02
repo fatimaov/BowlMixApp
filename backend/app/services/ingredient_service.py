@@ -212,6 +212,29 @@ def create_ingredient_for_user(user_id, data):
     return serialize_ingredient_for_management(ingredient, user_ingredient)
 
 
+def update_ingredient_for_user(user_id, ingredient_id, data):
+    data = data or {}
+
+    if data.get("is_active") is False:
+        if len(data) != 1:
+            raise ValueError("Soft delete requests may only include is_active.")
+
+        soft_delete_custom_ingredient(user_id, ingredient_id)
+        return {"success": True, "message": "Ingredient deleted successfully."}
+
+    if "is_active" in data:
+        raise ValueError("is_active may only be set to false for soft delete.")
+
+    if "name" not in data:
+        raise ValueError("Ingredient update requires a name.")
+
+    if len(data) != 1:
+        raise ValueError("Ingredient update only supports the name field.")
+
+    updated_ingredient = update_custom_ingredient(user_id, ingredient_id, data)
+    return {"success": True, "ingredient": updated_ingredient}
+
+
 def update_custom_ingredient(user_id, ingredient_id, data):
     ingredient = get_active_custom_ingredient_for_user(user_id, ingredient_id)
     data = data or {}

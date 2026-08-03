@@ -57,6 +57,15 @@ Each request covers one scenario at a time, even when multiple tests reuse the s
   - `Demo Generate - Non-JSON body` -> expected `400` / `INVALID_JSON`, passed
   - `Demo Generate - JSON array instead of object` -> expected `400` / `INVALID_PAYLOAD`, passed
 
+### Ingredients
+
+- Run date: August 3, 2026
+- Status: `Passed`
+- Cases:
+  - `Ingredients List - Invalid category_id` -> expected `400` / `INGREDIENTS_FETCH_ERROR`, passed
+  - `Create Ingredient - Missing name` -> expected `400` / `INGREDIENT_CREATE_ERROR`, passed
+  - `Ingredient Availability - is_available not boolean` -> expected `400` / `INGREDIENT_AVAILABILITY_ERROR`, passed
+
 ## Evidence
 
 - Environment: Local development
@@ -64,7 +73,7 @@ Each request covers one scenario at a time, even when multiple tests reuse the s
 - Collection name: BowlMix API
 - Tester: Fatima
 - Result: `In Progress`
-- Notes: Completed so far: `Auth > Register`, `Auth > Login`, `Auth > Me`, and `Demo`. All executed scenarios returned the expected failure responses.
+- Notes: Completed so far: `Auth > Register`, `Auth > Login`, `Auth > Me`, `Demo`, and `Ingredients`. All executed scenarios returned the expected failure responses.
 
 ### Screenshots
 
@@ -74,3 +83,4 @@ Add any supporting screenshots here and store the files in [assets](./assets).
 - Auth login edge-case runner summary: Suggested file name `assets/auth-login-edge-cases-summary.png`
 - Auth me edge-case runner summary: Suggested file name `assets/auth-me-edge-cases-summary.png`
 - Demo edge-case runner summary: Suggested file name `assets/demo-edge-cases-summary.png`
+- Ingredients edge-case runner summary: Suggested file name `assets/ingredients-edge-cases-summary.png`

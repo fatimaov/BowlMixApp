@@ -2,7 +2,7 @@
 
 API-only Flask backend for BowlMix. The backend owns authentication, persistence, ingredient personalization, deterministic bowl generation, and saved bowl snapshots. It does not serve the React frontend.
 
-Current route coverage includes health, public demo generation, auth, public category metadata, authenticated ingredient management, authenticated bowl build/generate endpoints, and authenticated saved bowl list/create endpoints.
+Current route coverage includes health, public demo generation, auth, public category metadata, authenticated ingredient management, authenticated bowl build/generate endpoints, and authenticated saved bowl list/create/update endpoints.
 
 ## Implemented So Far
 
@@ -167,7 +167,7 @@ Flask-Admin is available for local model inspection once the app is running. Reg
 - Added authenticated ingredient routes for `GET /api/ingredients`, `POST /api/ingredients`, `PATCH /api/ingredients/<id>`, and `PATCH /api/ingredients/<id>/availability`.
 - Added public category metadata route `GET /api/categories` for shared category labels, ordering, styling metadata, and approved visual patterns used across public and authenticated frontend flows.
 - Added authenticated bowl routes for `POST /api/bowls/build` and `POST /api/bowls/generate` backed by the implemented Build Mode and Generate Mode services.
-- Added authenticated saved bowl routes `GET /api/saved-bowls` and `POST /api/saved-bowls` for listing and creating the current user's saved bowl snapshots.
+- Added authenticated saved bowl routes `GET /api/saved-bowls`, `POST /api/saved-bowls`, and `PATCH /api/saved-bowls/<id>` for listing, creating, renaming, and soft-deleting the current user's saved bowls.
 - Added server-side saved bowl validation so save requests must reference valid available ingredient IDs for the current user and satisfy shared bowl composition rules.
 - Added `POST /api/demo/bowls/generate` for public demo bowl generation with active default ingredients.
 - Added auth routes for `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`, and `PATCH /api/auth/me`.

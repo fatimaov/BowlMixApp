@@ -2,9 +2,13 @@
 
 ## Purpose
 
-Document targeted API validation and error-handling checks executed through Postman.
+Document the API edge-case scenarios executed and recorded through Postman.
 
 ## Scope
+
+This document tracks the selected edge-case cases covered in Postman. It is not intended to be an exhaustive inventory of every manual validation performed outside the collection.
+
+Additional smoke testing and ad hoc API checks were also performed during development while building the endpoints, including iterative validation with AI assistance, but those checks are not fully enumerated in this report.
 
 Edge-case testing is grouped by feature area:
 
@@ -99,8 +103,8 @@ Each request covers one scenario at a time, even when multiple tests reuse the s
 - Backend base URL: http://127.0.0.1:5000
 - Collection name: BowlMix API
 - Tester: Fatima
-- Result: `In Progress`
-- Notes: Completed so far: `Auth > Register`, `Auth > Login`, `Auth > Me`, `Demo`, `Categories`, `Ingredients`, `Bowls`, and `Saved Bowls`. All executed scenarios returned the expected results.
+- Result: `Pass for documented Postman edge cases`
+- Notes: This document records the selected Postman edge-case coverage for `Auth > Register`, `Auth > Login`, `Auth > Me`, `Demo`, `Categories`, `Ingredients`, `Bowls`, and `Saved Bowls`. Additional smoke tests and manual checks were also performed during API development, including iterative validation with AI assistance, but are not fully itemized here.
 
 ### Screenshots
 

@@ -134,6 +134,11 @@ from app.services.public_demo_service import generate_public_demo_bowls
 generate_public_demo_bowls()
 ```
 
+Postman happy-flow verification:
+
+- A Postman happy-flow run covering public demo generation, auth, categories, ingredients, bowls, saved bowls, and password change passed successfully on August 3, 2026.
+- Supporting test documentation is available at [public-docs/testing/api-happy-flow.md](../public-docs/testing/api-happy-flow.md).
+
 ## Service Map
 
 - `auth_service.py`: account creation, login validation, profile/password updates, user soft delete, user serialization.

@@ -48,6 +48,15 @@ Each request covers one scenario at a time, even when multiple tests reuse the s
   - `Update Me - Wrong current password` -> expected `400` / `USER_UPDATE_ERROR`, passed
   - `Update Me - is_active false with extra fields` -> expected `400` / `INVALID_PAYLOAD`, passed
 
+### Demo
+
+- Run date: August 3, 2026
+- Status: `Passed`
+- Cases:
+  - `Demo Generate - Payload not allowed` -> expected `400` / `UNSUPPORTED_DEMO_OPTIONS`, passed
+  - `Demo Generate - Non-JSON body` -> expected `400` / `INVALID_JSON`, passed
+  - `Demo Generate - JSON array instead of object` -> expected `400` / `INVALID_PAYLOAD`, passed
+
 ## Evidence
 
 - Environment: Local development
@@ -55,7 +64,7 @@ Each request covers one scenario at a time, even when multiple tests reuse the s
 - Collection name: BowlMix API
 - Tester: Fatima
 - Result: `In Progress`
-- Notes: Completed so far: `Auth > Register`, `Auth > Login`, and `Auth > Me`. All executed scenarios returned the expected failure responses.
+- Notes: Completed so far: `Auth > Register`, `Auth > Login`, `Auth > Me`, and `Demo`. All executed scenarios returned the expected failure responses.
 
 ### Screenshots
 
@@ -64,3 +73,4 @@ Add any supporting screenshots here and store the files in [assets](./assets).
 - Auth register edge-case runner summary: Suggested file name `assets/auth-register-edge-cases-summary.png`
 - Auth login edge-case runner summary: Suggested file name `assets/auth-login-edge-cases-summary.png`
 - Auth me edge-case runner summary: Suggested file name `assets/auth-me-edge-cases-summary.png`
+- Demo edge-case runner summary: Suggested file name `assets/demo-edge-cases-summary.png`

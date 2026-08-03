@@ -1,11 +1,28 @@
-from sqlalchemy import Boolean, ForeignKey, Integer, String
+from sqlalchemy import Boolean, CheckConstraint, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.config.extensions import db
 
+APPROVED_VISUAL_PATTERNS = (
+    "solid",
+    "dots",
+    "stripes",
+    "grid",
+    "speckled",
+    "ring",
+    "split",
+)
+
 
 class Ingredient(db.Model):
     __tablename__ = "ingredients"
+    __table_args__ = (
+        CheckConstraint(
+            "visual_pattern IN ('solid', 'dots', 'stripes', 'grid', "
+            "'speckled', 'ring', 'split')",
+            name="ck_ingredients_visual_pattern_allowed",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)

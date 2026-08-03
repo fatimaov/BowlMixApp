@@ -57,6 +57,15 @@ Each request covers one scenario at a time, even when multiple tests reuse the s
   - `Demo Generate - Non-JSON body` -> expected `400` / `INVALID_JSON`, passed
   - `Demo Generate - JSON array instead of object` -> expected `400` / `INVALID_PAYLOAD`, passed
 
+### Categories
+
+- Run date: August 3, 2026
+- Status: `Passed`
+- Cases:
+  - `Categories - POST not allowed` -> expected `405`, passed
+  - `Categories - PATCH not allowed` -> expected `405`, passed
+  - `Categories - Response shape check` -> expected `200`, passed
+
 ### Ingredients
 
 - Run date: August 3, 2026
@@ -91,7 +100,7 @@ Each request covers one scenario at a time, even when multiple tests reuse the s
 - Collection name: BowlMix API
 - Tester: Fatima
 - Result: `In Progress`
-- Notes: Completed so far: `Auth > Register`, `Auth > Login`, `Auth > Me`, `Demo`, `Ingredients`, `Bowls`, and `Saved Bowls`. All executed scenarios returned the expected failure responses.
+- Notes: Completed so far: `Auth > Register`, `Auth > Login`, `Auth > Me`, `Demo`, `Categories`, `Ingredients`, `Bowls`, and `Saved Bowls`. All executed scenarios returned the expected results.
 
 ### Screenshots
 
@@ -101,6 +110,7 @@ Add any supporting screenshots here and store the files in [assets](./assets).
 - Auth login edge-case runner summary: Suggested file name `assets/auth-login-edge-cases-summary.png`
 - Auth me edge-case runner summary: Suggested file name `assets/auth-me-edge-cases-summary.png`
 - Demo edge-case runner summary: Suggested file name `assets/demo-edge-cases-summary.png`
+- Categories edge-case runner summary: Suggested file name `assets/categories-edge-cases-summary.png`
 - Ingredients edge-case runner summary: Suggested file name `assets/ingredients-edge-cases-summary.png`
 - Bowls edge-case runner summary: Suggested file name `assets/bowls-edge-cases-summary.png`
 - Saved bowls edge-case runner summary: Suggested file name `assets/saved-bowls-edge-cases-summary.png`

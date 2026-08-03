@@ -18,7 +18,7 @@ Current route coverage includes health, public demo generation, auth, public cat
 
 Not implemented yet:
 
-- Saved bowl or AI API routes.
+- AI API routes.
 - Frontend integration.
 - Backend AI provider integration.
 
@@ -165,6 +165,7 @@ Flask-Admin is available for local model inspection once the app is running. Reg
 - Added authenticated ingredient routes for `GET /api/ingredients`, `POST /api/ingredients`, `PATCH /api/ingredients/<id>`, and `PATCH /api/ingredients/<id>/availability`.
 - Added public category metadata route `GET /api/categories` for shared category labels, ordering, styling metadata, and approved visual patterns used across public and authenticated frontend flows.
 - Added authenticated bowl routes for `POST /api/bowls/build` and `POST /api/bowls/generate` backed by the implemented Build Mode and Generate Mode services.
+- Added authenticated saved bowl route `GET /api/saved-bowls` for listing the current user's saved bowl snapshots.
 - Added `POST /api/demo/bowls/generate` for public demo bowl generation with active default ingredients.
 - Added auth routes for `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`, and `PATCH /api/auth/me`.
 - Added Black as a backend dev package and applied formatting updates.

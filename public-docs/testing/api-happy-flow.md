@@ -92,7 +92,7 @@ It does not validate:
 - Run date: Aug 03, 2026 08:21:20 PM
 - Environment: Local development
 - Backend base URL: http://127.0.0.1:5000
-- Collection name: BowlMix API - Happy Flow
+- Collection name: BowlMix API
 - Tester: Fatima
 - Result: `Pass`
 - Notes: All happy-flow requests passed in sequence and Postman collection variables were populated correctly across the run.

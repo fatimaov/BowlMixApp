@@ -58,17 +58,47 @@ Summary:
 - Duplicate email and duplicate username protections behaved as expected
 - Invalid email validation behaved as expected
 
+#### Login
+
+Run date:
+- August 3, 2026
+
+Status:
+- Passed
+
+Executed tests:
+
+1. `Login - Wrong password`
+   Expected result: `400 Bad Request`
+   Expected error code: `INVALID_CREDENTIALS`
+   Actual result: Passed
+2. `Login - Missing password`
+   Expected result: `400 Bad Request`
+   Expected error code: `LOGIN_VALIDATION_ERROR`
+   Actual result: Passed
+3. `Login - Unknown email`
+   Expected result: `400 Bad Request`
+   Expected error code: `INVALID_CREDENTIALS`
+   Actual result: Passed
+
+Summary:
+
+- The login endpoint correctly rejected all three tested invalid scenarios
+- Invalid credential handling behaved as expected for wrong password and unknown email
+- Missing password validation behaved as expected
+
 ## Evidence
 
 - Environment: Local development
 - Backend base URL: http://127.0.0.1:5000
 - Collection name: BowlMix API
 - Tester: Fatima
-- Result: `Pass`
-- Notes: The first executed edge-case batch covered `Auth > Register` and all three scenarios returned the expected `400 Bad Request` response.
+- Result: `In Progress`
+- Notes: Edge-case testing is being executed incrementally by feature area. The completed batches so far are `Auth > Register` and `Auth > Login`, and all executed scenarios returned the expected `400 Bad Request` responses.
 
 ### Screenshots
 
 Add any supporting screenshots here and store the files in [assets](./assets).
 
 - Auth register edge-case runner summary: Suggested file name `assets/auth-register-edge-cases-summary.png`
+- Auth login edge-case runner summary: Suggested file name `assets/auth-login-edge-cases-summary.png`

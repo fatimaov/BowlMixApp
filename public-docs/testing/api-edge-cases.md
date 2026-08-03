@@ -75,6 +75,15 @@ Each request covers one scenario at a time, even when multiple tests reuse the s
   - `Build Bowl - Missing vegetable` -> expected `400` / `BUILD_BOWL_ERROR`, passed
   - `Generate Bowls - Same ingredient locked and excluded` -> expected `400` / `GENERATE_BOWLS_ERROR`, passed
 
+### Saved Bowls
+
+- Run date: August 3, 2026
+- Status: `Passed`
+- Cases:
+  - `Create Saved Bowl - Missing ingredients` -> expected `400` / `SAVED_BOWL_CREATE_ERROR`, passed
+  - `Create Saved Bowl - Duplicate ingredients` -> expected `400` / `SAVED_BOWL_CREATE_ERROR`, passed
+  - `Update Saved Bowl - deleted_at true with extra fields` -> expected `400` / `INVALID_PAYLOAD`, passed
+
 ## Evidence
 
 - Environment: Local development
@@ -82,7 +91,7 @@ Each request covers one scenario at a time, even when multiple tests reuse the s
 - Collection name: BowlMix API
 - Tester: Fatima
 - Result: `In Progress`
-- Notes: Completed so far: `Auth > Register`, `Auth > Login`, `Auth > Me`, `Demo`, `Ingredients`, and `Bowls`. All executed scenarios returned the expected failure responses.
+- Notes: Completed so far: `Auth > Register`, `Auth > Login`, `Auth > Me`, `Demo`, `Ingredients`, `Bowls`, and `Saved Bowls`. All executed scenarios returned the expected failure responses.
 
 ### Screenshots
 
@@ -94,3 +103,4 @@ Add any supporting screenshots here and store the files in [assets](./assets).
 - Demo edge-case runner summary: Suggested file name `assets/demo-edge-cases-summary.png`
 - Ingredients edge-case runner summary: Suggested file name `assets/ingredients-edge-cases-summary.png`
 - Bowls edge-case runner summary: Suggested file name `assets/bowls-edge-cases-summary.png`
+- Saved bowls edge-case runner summary: Suggested file name `assets/saved-bowls-edge-cases-summary.png`

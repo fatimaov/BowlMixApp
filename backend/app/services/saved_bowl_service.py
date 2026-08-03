@@ -5,6 +5,8 @@ from sqlalchemy.orm import joinedload
 
 from app.config.extensions import db
 from app.models import Ingredient, SavedBowl, SavedBowlIngredient, UserIngredient
+from app.services.build_mode_service import group_selected_ingredients_by_category
+from app.services.bowl_validation_service import validate_bowl_composition
 from app.services.snapshot_service import (
     create_snapshot_records,
     serialize_snapshots,
@@ -22,6 +24,7 @@ def create_saved_bowl(user_id, data):
     custom_name = normalize_optional_bowl_name(data.get("custom_name"))
     ingredient_ids = extract_ingredient_ids(data)
     ingredients = get_available_ingredients_for_snapshot(user_id, ingredient_ids)
+    validate_saved_bowl_ingredients(ingredients)
 
     saved_bowl = SavedBowl(
         user_id=user_id,
@@ -142,6 +145,11 @@ def get_available_ingredients_for_snapshot(user_id, ingredient_ids):
         raise ValueError("Bowl contains unavailable or invalid ingredients.")
 
     return [ingredients_by_id[ingredient_id] for ingredient_id in ingredient_ids]
+
+
+def validate_saved_bowl_ingredients(ingredients):
+    ingredients_by_category = group_selected_ingredients_by_category(ingredients)
+    validate_bowl_composition(ingredients_by_category)
 
 
 def extract_ingredient_ids(data):

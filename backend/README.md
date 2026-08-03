@@ -2,7 +2,7 @@
 
 API-only Flask backend for BowlMix. The backend owns authentication, persistence, ingredient personalization, deterministic bowl generation, and saved bowl snapshots. It does not serve the React frontend.
 
-Current route coverage includes health, public demo generation, auth, public category metadata, authenticated ingredient management, and authenticated bowl build/generate endpoints.
+Current route coverage includes health, public demo generation, auth, public category metadata, authenticated ingredient management, authenticated bowl build/generate endpoints, and authenticated saved bowl list/create endpoints.
 
 ## Implemented So Far
 
@@ -14,7 +14,7 @@ Current route coverage includes health, public demo generation, auth, public cat
 - Public demo generation using active default ingredients.
 - Ingredient management service for My Ingredients, selector options, custom ingredient create/update, and custom ingredient soft deletion.
 - Availability service for user-specific `UserIngredient.is_available` updates.
-- Saved bowl service and snapshot service for saving bowls with stable ingredient/category visual snapshots.
+- Saved bowl service and snapshot service for saving bowls with stable ingredient/category visual snapshots plus server-side save validation.
 
 Not implemented yet:
 
@@ -154,6 +154,8 @@ Saved bowl ingredients are snapshots. When a bowl is saved, the backend copies i
 
 This keeps saved bowls stable even if ingredients, categories, or visual metadata change later.
 
+Saved bowl create requests are also validated server-side before snapshot creation. The backend resolves submitted ingredient IDs against the current user's available ingredients, rejects invalid or unavailable IDs, and validates the final bowl composition against the shared category min/max rules.
+
 Default ingredients are stored once in `ingredients` and are treated as available for every user unless a user-specific override exists. `user_ingredients` stores only per-user availability overrides and custom-ingredient availability, so a row is created when a user toggles an ingredient instead of pre-populating default rows for every account.
 
 ## Admin
@@ -165,7 +167,8 @@ Flask-Admin is available for local model inspection once the app is running. Reg
 - Added authenticated ingredient routes for `GET /api/ingredients`, `POST /api/ingredients`, `PATCH /api/ingredients/<id>`, and `PATCH /api/ingredients/<id>/availability`.
 - Added public category metadata route `GET /api/categories` for shared category labels, ordering, styling metadata, and approved visual patterns used across public and authenticated frontend flows.
 - Added authenticated bowl routes for `POST /api/bowls/build` and `POST /api/bowls/generate` backed by the implemented Build Mode and Generate Mode services.
-- Added authenticated saved bowl route `GET /api/saved-bowls` for listing the current user's saved bowl snapshots.
+- Added authenticated saved bowl routes `GET /api/saved-bowls` and `POST /api/saved-bowls` for listing and creating the current user's saved bowl snapshots.
+- Added server-side saved bowl validation so save requests must reference valid available ingredient IDs for the current user and satisfy shared bowl composition rules.
 - Added `POST /api/demo/bowls/generate` for public demo bowl generation with active default ingredients.
 - Added auth routes for `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`, and `PATCH /api/auth/me`.
 - Added Black as a backend dev package and applied formatting updates.

@@ -4,8 +4,7 @@ from app.models import SavedBowlIngredient
 
 def create_snapshot_records(saved_bowl_id, ingredients):
     snapshots = [
-        create_snapshot_record(saved_bowl_id, ingredient)
-        for ingredient in ingredients
+        create_snapshot_record(saved_bowl_id, ingredient) for ingredient in ingredients
     ]
     db.session.add_all(snapshots)
     return snapshots

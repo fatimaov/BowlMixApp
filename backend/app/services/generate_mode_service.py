@@ -9,6 +9,29 @@ from app.services.bowl_validation_service import (
     get_ingredient_ids,
     validate_generation_inputs,
 )
+from app.services.ingredient_service import (
+    get_active_available_ingredient_pool_for_user,
+    get_active_available_ingredients_for_user,
+)
+
+
+def generate_bowls_for_user(user_id, data):
+    data = data or {}
+    ingredient_pool = get_active_available_ingredient_pool_for_user(user_id)
+    locked_ingredients = get_active_available_ingredients_for_user(
+        user_id,
+        data.get("locked_ingredient_ids"),
+    )
+    excluded_ingredients = get_active_available_ingredients_for_user(
+        user_id,
+        data.get("excluded_ingredient_ids"),
+    )
+
+    return generate_generate_mode_bowls(
+        ingredient_pool,
+        locked_ingredients=locked_ingredients,
+        excluded_ingredients=excluded_ingredients,
+    )
 
 
 def generate_generate_mode_bowls(

@@ -5,11 +5,12 @@ from sqlalchemy.orm import joinedload
 
 from app.config.extensions import db
 from app.models import Ingredient, SavedBowl, SavedBowlIngredient, UserIngredient
+from app.services.build_mode_service import group_selected_ingredients_by_category
+from app.services.bowl_validation_service import validate_bowl_composition
 from app.services.snapshot_service import (
     create_snapshot_records,
     serialize_snapshots,
 )
-
 
 MAX_BOWL_NAME_LENGTH = 120
 
@@ -23,6 +24,7 @@ def create_saved_bowl(user_id, data):
     custom_name = normalize_optional_bowl_name(data.get("custom_name"))
     ingredient_ids = extract_ingredient_ids(data)
     ingredients = get_available_ingredients_for_snapshot(user_id, ingredient_ids)
+    validate_saved_bowl_ingredients(ingredients)
 
     saved_bowl = SavedBowl(
         user_id=user_id,
@@ -145,12 +147,16 @@ def get_available_ingredients_for_snapshot(user_id, ingredient_ids):
     return [ingredients_by_id[ingredient_id] for ingredient_id in ingredient_ids]
 
 
+def validate_saved_bowl_ingredients(ingredients):
+    ingredients_by_category = group_selected_ingredients_by_category(ingredients)
+    validate_bowl_composition(ingredients_by_category)
+
+
 def extract_ingredient_ids(data):
     composition = get_bowl_composition(data)
     raw_ingredients = flatten_composition(composition)
     ingredient_ids = [
-        extract_ingredient_id(ingredient)
-        for ingredient in raw_ingredients
+        extract_ingredient_id(ingredient) for ingredient in raw_ingredients
     ]
 
     if not ingredient_ids:

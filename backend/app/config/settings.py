@@ -4,7 +4,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-
 BASE_DIR = Path(__file__).resolve().parents[2]
 load_dotenv(BASE_DIR / ".env")
 
@@ -13,7 +12,9 @@ def get_database_url():
     database_url = os.getenv("DATABASE_URL")
 
     if not database_url:
-        raise RuntimeError("DATABASE_URL must be set to a PostgreSQL connection string.")
+        raise RuntimeError(
+            "DATABASE_URL must be set to a PostgreSQL connection string."
+        )
 
     if not database_url.startswith(("postgresql://", "postgresql+psycopg2://")):
         raise RuntimeError("DATABASE_URL must use a PostgreSQL connection string.")

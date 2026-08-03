@@ -5,6 +5,7 @@ from app.services.bowl_validation_service import (
     get_ingredient_category_key,
     validate_bowl_composition,
 )
+from app.services.ingredient_service import get_active_available_ingredients_for_user
 
 
 def generate_build_mode_bowl(selected_ingredients):
@@ -29,6 +30,16 @@ def generate_build_mode_bowl(selected_ingredients):
         "name": bowl["name"],
         "ingredients": bowl["ingredients"],
     }
+
+
+def build_bowl_for_user(user_id, data):
+    data = data or {}
+    selected_ingredient_ids = data.get("selected_ingredient_ids")
+    selected_ingredients = get_active_available_ingredients_for_user(
+        user_id,
+        selected_ingredient_ids,
+    )
+    return generate_build_mode_bowl(selected_ingredients)
 
 
 def group_selected_ingredients_by_category(selected_ingredients):

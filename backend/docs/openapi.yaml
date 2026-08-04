@@ -1,0 +1,6 @@
+openapi: 3.0.3
+info:
+  title: BowlMix API
+  version: 0.1.0
+  description: Starter OpenAPI document for local Swagger UI testing.
+paths: {}

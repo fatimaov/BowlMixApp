@@ -157,10 +157,9 @@ generate_public_demo_bowls()
 
 - Postman happy-flow verification passed successfully on August 3, 2026.
 - Postman edge-case verification passed successfully for the documented scenarios on August 3, 2026.
-- Supporting docs:
-  - [public-docs/testing/api-happy-flow.md](../public-docs/testing/api-happy-flow.md)
-  - [public-docs/testing/api-edge-cases.md](../public-docs/testing/api-edge-cases.md)
-- Additional smoke tests and ad hoc manual checks were also performed during development, but are not fully itemized in the Postman docs.
+- Consolidated Postman summary:
+  - [backend/docs/testing/postman-summary.md](./docs/testing/postman-summary.md)
+- Additional smoke tests and ad hoc manual checks were also performed during development and are called out in the consolidated summary, but are not exhaustively itemized there.
 
 ## Service Map
 

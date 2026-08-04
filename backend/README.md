@@ -15,6 +15,7 @@ Current route coverage includes health, public demo generation, auth, categories
 - Ingredient management service for My Ingredients, selector options, custom ingredient create/update, and custom ingredient soft deletion.
 - Availability service for user-specific `UserIngredient.is_available` updates.
 - Saved bowl service and snapshot service for saving bowls with stable ingredient/category visual snapshots plus server-side save validation.
+- OpenAPI spec serving plus Swagger UI docs for local API exploration at `/openapi.yaml` and `/api/docs/`.
 
 Not implemented:
 
@@ -88,6 +89,15 @@ pipenv run start
 
 The default local API URL is `http://127.0.0.1:5000`.
 
+## API Docs
+
+Once the backend is running locally:
+
+- OpenAPI spec: `http://127.0.0.1:5000/openapi.yaml`
+- Swagger UI: `http://127.0.0.1:5000/api/docs/`
+
+Referenced OpenAPI assets are served from `backend/docs/openapi/`.
+
 ## Common Commands
 
 Run from `backend/`.
@@ -114,6 +124,16 @@ Expected:
 ```json
 { "service": "bowlmix-api", "status": "ok" }
 ```
+
+OpenAPI docs:
+
+```bash
+curl http://127.0.0.1:5000/openapi.yaml
+```
+
+Swagger UI:
+
+Open `http://127.0.0.1:5000/api/docs/` in a browser.
 
 Compile backend Python files:
 

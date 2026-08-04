@@ -1,0 +1,141 @@
+BowlIngredientCategory:
+  type: object
+  required: [id, name, slug, color_key, shape_family]
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    slug:
+      type: string
+    color_key:
+      type: string
+    shape_family:
+      type: string
+
+BowlIngredient:
+  type: object
+  required: [id, name, category, visual_pattern]
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    category:
+      $ref: '#/BowlIngredientCategory'
+    visual_pattern:
+      type: string
+      enum: [solid, dots, stripes, grid, speckled, ring, split]
+
+BowlIngredientsByCategory:
+  type: object
+  required:
+    - bases
+    - proteins
+    - vegetables
+    - toppings
+    - crunch_elements
+    - sauces
+    - extras
+  properties:
+    bases:
+      type: array
+      items:
+        $ref: '#/BowlIngredient'
+    proteins:
+      type: array
+      items:
+        $ref: '#/BowlIngredient'
+    vegetables:
+      type: array
+      items:
+        $ref: '#/BowlIngredient'
+    toppings:
+      type: array
+      items:
+        $ref: '#/BowlIngredient'
+    crunch_elements:
+      type: array
+      items:
+        $ref: '#/BowlIngredient'
+    sauces:
+      type: array
+      items:
+        $ref: '#/BowlIngredient'
+    extras:
+      type: array
+      items:
+        $ref: '#/BowlIngredient'
+  additionalProperties: false
+
+Bowl:
+  type: object
+  required: [name, ingredients]
+  properties:
+    name:
+      type: string
+    ingredients:
+      $ref: '#/BowlIngredientsByCategory'
+
+BuildBowlRequest:
+  type: object
+  required: [selected_ingredient_ids]
+  properties:
+    selected_ingredient_ids:
+      type: array
+      items:
+        type: integer
+      uniqueItems: true
+  additionalProperties: false
+
+GenerateBowlsRequest:
+  type: object
+  properties:
+    locked_ingredient_ids:
+      type: array
+      items:
+        type: integer
+      uniqueItems: true
+    excluded_ingredient_ids:
+      type: array
+      items:
+        type: integer
+      uniqueItems: true
+  additionalProperties: false
+
+DemoGenerateBowlsRequest:
+  type: object
+  maxProperties: 0
+  additionalProperties: false
+
+BowlResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [bowl]
+      properties:
+        bowl:
+          $ref: '#/Bowl'
+
+BowlsResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [bowls]
+      properties:
+        bowls:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            $ref: '#/Bowl'

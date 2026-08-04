@@ -1,0 +1,61 @@
+InvalidJson:
+  description: Request body must be valid JSON
+  content:
+    application/json:
+      schema:
+        $ref: ../schemas/common.yaml#/ErrorResponse
+      example:
+        success: false
+        error:
+          code: INVALID_JSON
+          message: Request body must be valid JSON.
+
+InvalidPayload:
+  description: Request body must be a JSON object
+  content:
+    application/json:
+      schema:
+        $ref: ../schemas/common.yaml#/ErrorResponse
+      example:
+        success: false
+        error:
+          code: INVALID_PAYLOAD
+          message: Request body must be a JSON object.
+
+Unauthorized:
+  description: Missing, expired, or invalid JWT bearer token
+  content:
+    application/json:
+      schema:
+        $ref: ../schemas/common.yaml#/JwtErrorResponse
+      examples:
+        missing_header:
+          value:
+            msg: Missing Authorization Header
+        invalid_token:
+          value:
+            msg: Not enough segments
+
+UserNotFound:
+  description: Authenticated user no longer exists in the active scope
+  content:
+    application/json:
+      schema:
+        $ref: ../schemas/common.yaml#/ErrorResponse
+      example:
+        success: false
+        error:
+          code: USER_NOT_FOUND
+          message: User not found.
+
+SavedBowlNotFound:
+  description: Saved bowl was not found for the current user
+  content:
+    application/json:
+      schema:
+        $ref: ../schemas/common.yaml#/ErrorResponse
+      example:
+        success: false
+        error:
+          code: SAVED_BOWL_UPDATE_ERROR
+          message: Saved bowl not found.

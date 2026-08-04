@@ -1,0 +1,116 @@
+ingredients_collection:
+  get:
+    tags: [Ingredients]
+    summary: List ingredients for the authenticated user
+    description: |
+      Without `category_id`, this returns the ingredient management view.
+      With `category_id`, it returns selector-ready ingredients for that category.
+      Search filtering is applied only when the query text is at least 3 characters long.
+    security:
+      - BearerAuth: []
+    parameters:
+      - $ref: ../components/parameters.yaml#/IngredientSearch
+      - $ref: ../components/parameters.yaml#/CategoryId
+    responses:
+      "200":
+        description: Ingredients retrieved successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/ingredient.yaml#/IngredientsResponse
+      "400":
+        description: Invalid category filter or other fetch error
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized
+  post:
+    tags: [Ingredients]
+    summary: Create a custom ingredient
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/ingredient.yaml#/CreateIngredientRequest
+    responses:
+      "201":
+        description: Ingredient created successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/ingredient.yaml#/IngredientResponse
+      "400":
+        description: Validation error while creating the ingredient
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized
+
+ingredient_item:
+  patch:
+    tags: [Ingredients]
+    summary: Rename or soft delete a custom ingredient
+    security:
+      - BearerAuth: []
+    parameters:
+      - $ref: ../components/parameters.yaml#/IngredientId
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../schemas/ingredient.yaml#/RenameIngredientRequest
+              - $ref: ../schemas/ingredient.yaml#/SoftDeleteIngredientRequest
+    responses:
+      "200":
+        description: Ingredient updated successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/ingredient.yaml#/IngredientMutationResult
+      "400":
+        description: Validation error or ingredient not found in the editable scope
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized
+
+ingredient_availability:
+  patch:
+    tags: [Ingredients]
+    summary: Update ingredient availability
+    security:
+      - BearerAuth: []
+    parameters:
+      - $ref: ../components/parameters.yaml#/IngredientId
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/ingredient.yaml#/UpdateAvailabilityRequest
+    responses:
+      "200":
+        description: Availability updated successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/ingredient.yaml#/IngredientAvailabilityResponse
+      "400":
+        description: Invalid payload, invalid boolean, or ingredient not found
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized

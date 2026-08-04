@@ -1,0 +1,31 @@
+IngredientId:
+  name: ingredient_id
+  in: path
+  required: true
+  schema:
+    type: integer
+  description: Ingredient identifier
+
+SavedBowlId:
+  name: saved_bowl_id
+  in: path
+  required: true
+  schema:
+    type: integer
+  description: Saved bowl identifier
+
+IngredientSearch:
+  name: search
+  in: query
+  required: false
+  schema:
+    type: string
+  description: Ingredient name filter. Applied only when the trimmed value is at least 3 characters.
+
+CategoryId:
+  name: category_id
+  in: query
+  required: false
+  schema:
+    type: integer
+  description: Category identifier used to switch the response into selector mode.

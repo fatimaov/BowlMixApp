@@ -1,0 +1,172 @@
+IngredientBase:
+  type: object
+  required:
+    - id
+    - name
+    - category
+    - is_default
+    - is_active
+    - is_available
+    - visual_pattern
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    category:
+      $ref: ./category.yaml#/IngredientCategorySummary
+    is_default:
+      type: boolean
+    is_active:
+      type: boolean
+    is_available:
+      type: boolean
+    visual_pattern:
+      type: string
+      enum: [solid, dots, stripes, grid, speckled, ring, split]
+
+IngredientManagement:
+  allOf:
+    - $ref: '#/IngredientBase'
+    - type: object
+      required: [can_edit, can_delete, can_toggle_availability]
+      properties:
+        can_edit:
+          type: boolean
+        can_delete:
+          type: boolean
+        can_toggle_availability:
+          type: boolean
+
+IngredientSelectorOption:
+  allOf:
+    - $ref: '#/IngredientBase'
+    - type: object
+      required: [can_toggle_availability, selectable]
+      properties:
+        can_toggle_availability:
+          type: boolean
+        selectable:
+          type: boolean
+
+IngredientAvailability:
+  type: object
+  required: [ingredient_id, user_id, is_available, selectable]
+  properties:
+    ingredient_id:
+      type: integer
+    user_id:
+      type: integer
+    is_available:
+      type: boolean
+    selectable:
+      type: boolean
+
+CreateIngredientRequest:
+  type: object
+  required: [name, category_id]
+  properties:
+    name:
+      type: string
+    category_id:
+      type: integer
+    is_available:
+      type: boolean
+  additionalProperties: false
+
+RenameIngredientRequest:
+  type: object
+  required: [name]
+  properties:
+    name:
+      type: string
+  additionalProperties: false
+
+SoftDeleteIngredientRequest:
+  type: object
+  required: [is_active]
+  properties:
+    is_active:
+      type: boolean
+      enum: [false]
+  additionalProperties: false
+
+UpdateAvailabilityRequest:
+  type: object
+  required: [is_available]
+  properties:
+    is_available:
+      type: boolean
+  additionalProperties: false
+
+IngredientsResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [ingredients]
+      properties:
+        ingredients:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/IngredientManagement'
+              - $ref: '#/IngredientSelectorOption'
+
+IngredientResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [ingredient]
+      properties:
+        ingredient:
+          $ref: '#/IngredientManagement'
+
+IngredientMutationResult:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      oneOf:
+        - type: object
+          required: [success, message]
+          properties:
+            success:
+              type: boolean
+              enum: [true]
+            message:
+              type: string
+        - type: object
+          required: [success, ingredient]
+          properties:
+            success:
+              type: boolean
+              enum: [true]
+            ingredient:
+              $ref: '#/IngredientManagement'
+
+IngredientAvailabilityResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [availability]
+      properties:
+        availability:
+          $ref: '#/IngredientAvailability'

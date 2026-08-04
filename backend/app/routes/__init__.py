@@ -5,7 +5,7 @@ from app.routes.bowls import bowls_bp
 from app.routes.categories import categories_bp
 from app.routes.ingredients import ingredients_bp
 from app.routes.saved_bowls import saved_bowls_bp
-from app.routes.swagger import SWAGGER_URL, swagger_bp, swagger_ui_bp
+from app.routes.swagger import SWAGGER_URL, openapi_docs_bp, swagger_ui_bp
 
 
 def register_blueprints(app):
@@ -16,5 +16,5 @@ def register_blueprints(app):
     app.register_blueprint(categories_bp, url_prefix="/api")
     app.register_blueprint(ingredients_bp, url_prefix="/api")
     app.register_blueprint(saved_bowls_bp, url_prefix="/api")
-    app.register_blueprint(swagger_bp, url_prefix="/api")
+    app.register_blueprint(openapi_docs_bp, url_prefix="")
     app.register_blueprint(swagger_ui_bp, url_prefix=SWAGGER_URL)

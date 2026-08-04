@@ -1,14 +1,14 @@
 from pathlib import Path
 
-from flask import Blueprint, send_file
+from flask import Blueprint, send_from_directory
 from flask_swagger_ui import get_swaggerui_blueprint
 
 DOCS_DIR = Path(__file__).resolve().parents[2] / "docs"
-OPENAPI_FILE = DOCS_DIR / "openapi.yaml"
+OPENAPI_DIR = DOCS_DIR / "openapi"
 SWAGGER_URL = "/api/docs"
-OPENAPI_URL = "/api/swagger.yaml"
+OPENAPI_URL = "/openapi.yaml"
 
-swagger_bp = Blueprint("swagger", __name__)
+openapi_docs_bp = Blueprint("openapi_docs", __name__)
 
 swagger_ui_bp = get_swaggerui_blueprint(
     SWAGGER_URL,
@@ -19,6 +19,11 @@ swagger_ui_bp = get_swaggerui_blueprint(
 )
 
 
-@swagger_bp.get("/swagger.yaml")
-def get_openapi_spec():
-    return send_file(OPENAPI_FILE, mimetype="application/yaml")
+@openapi_docs_bp.get("/openapi.yaml")
+def get_root_openapi_spec():
+    return send_from_directory(OPENAPI_DIR, "openapi.yaml", mimetype="application/yaml")
+
+
+@openapi_docs_bp.get("/openapi/<path:filename>")
+def get_openapi_asset(filename):
+    return send_from_directory(OPENAPI_DIR, filename, mimetype="application/yaml")

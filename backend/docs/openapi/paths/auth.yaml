@@ -1,0 +1,137 @@
+auth_register:
+  post:
+    tags: [Auth]
+    summary: Register a new user
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/auth.yaml#/RegisterRequest
+    responses:
+      "201":
+        description: User created successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/auth.yaml#/RegisterResponse
+      "400":
+        description: Registration validation failed or the request body was invalid
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+            examples:
+              invalid_json:
+                value:
+                  success: false
+                  error:
+                    code: INVALID_JSON
+                    message: Request body must be valid JSON.
+              duplicate_username:
+                value:
+                  success: false
+                  error:
+                    code: REGISTER_VALIDATION_ERROR
+                    message: Username is already registered.
+
+auth_login:
+  post:
+    tags: [Auth]
+    summary: Authenticate a user
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/auth.yaml#/LoginRequest
+    responses:
+      "200":
+        description: Login successful
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/auth.yaml#/LoginResponse
+      "400":
+        description: Login validation failed, credentials were invalid, or the request body was invalid
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+            examples:
+              invalid_json:
+                value:
+                  success: false
+                  error:
+                    code: INVALID_JSON
+                    message: Request body must be valid JSON.
+              invalid_credentials:
+                value:
+                  success: false
+                  error:
+                    code: INVALID_CREDENTIALS
+                    message: Invalid email or password.
+
+auth_me:
+  get:
+    tags: [Auth]
+    summary: Get the current authenticated user
+    security:
+      - BearerAuth: []
+    responses:
+      "200":
+        description: Current user retrieved successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/auth.yaml#/CurrentUserResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized
+      "404":
+        description: The authenticated user was not found during the update flow
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+            example:
+              success: false
+              error:
+                code: USER_UPDATE_ERROR
+                message: User not found.
+  patch:
+    tags: [Auth]
+    summary: Update the current user or deactivate the account
+    description: |
+      This endpoint supports three current behaviors:
+      1. Update profile fields such as `username` and `email`.
+      2. Change password by providing `current_password` and `new_password`.
+      3. Soft delete the user by sending `{ "is_active": false }` and no other fields.
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../schemas/auth.yaml#/UpdateCurrentUserRequest
+              - $ref: ../schemas/auth.yaml#/DeactivateUserRequest
+    responses:
+      "200":
+        description: User updated or deactivated successfully
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: ../schemas/auth.yaml#/CurrentUserResponse
+                - $ref: ../schemas/common.yaml#/MessageResponse
+      "400":
+        description: Payload or validation error
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized
+      "404":
+        $ref: ../components/responses.yaml#/UserNotFound

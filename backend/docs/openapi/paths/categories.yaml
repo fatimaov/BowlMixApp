@@ -1,0 +1,11 @@
+categories_collection:
+  get:
+    tags: [Categories]
+    summary: List ingredient categories and approved visual patterns
+    responses:
+      "200":
+        description: Categories retrieved successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/category.yaml#/CategoriesResponse

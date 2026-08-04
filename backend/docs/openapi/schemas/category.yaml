@@ -1,0 +1,50 @@
+IngredientCategorySummary:
+  type: object
+  required: [id, name, slug, sort_order]
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    slug:
+      type: string
+    sort_order:
+      type: integer
+
+Category:
+  type: object
+  required: [id, name, slug, color_key, shape_family, sort_order]
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    slug:
+      type: string
+    color_key:
+      type: string
+    shape_family:
+      type: string
+    sort_order:
+      type: integer
+
+CategoriesResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [categories, visual_patterns]
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/Category'
+        visual_patterns:
+          type: array
+          items:
+            type: string
+            enum: [solid, dots, stripes, grid, speckled, ring, split]

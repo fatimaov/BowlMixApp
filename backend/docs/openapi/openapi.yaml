@@ -1,0 +1,171 @@
+openapi: 3.0.3
+info:
+  title: BowlMix API
+  version: 0.1.0
+  description: |
+    Manual OpenAPI specification for the currently implemented BowlMix backend.
+    This spec documents the public demo, auth, categories, ingredients, bowl generation,
+    and saved bowl endpoints. AI endpoints are intentionally excluded because they are
+    not implemented yet.
+servers:
+  - url: /api
+    description: BowlMix API base path
+tags:
+  - name: Auth
+    description: User registration, login, and profile management
+  - name: Demo
+    description: Public demo bowl generation
+  - name: Health
+    description: Service health checks
+  - name: Categories
+    description: Ingredient categories and visual metadata
+  - name: Ingredients
+    description: Ingredient management and availability updates
+  - name: Bowls
+    description: Build mode and generate mode endpoints
+  - name: Saved Bowls
+    description: Saved bowl persistence and soft deletion
+paths:
+  /health:
+    $ref: ./openapi/paths/health.yaml#/health_check
+  /auth/register:
+    $ref: ./openapi/paths/auth.yaml#/auth_register
+  /auth/login:
+    $ref: ./openapi/paths/auth.yaml#/auth_login
+  /auth/me:
+    $ref: ./openapi/paths/auth.yaml#/auth_me
+  /demo/bowls/generate:
+    $ref: ./openapi/paths/demo.yaml#/demo_generate_bowls
+  /categories:
+    $ref: ./openapi/paths/categories.yaml#/categories_collection
+  /ingredients:
+    $ref: ./openapi/paths/ingredients.yaml#/ingredients_collection
+  /ingredients/{ingredient_id}:
+    $ref: ./openapi/paths/ingredients.yaml#/ingredient_item
+  /ingredients/{ingredient_id}/availability:
+    $ref: ./openapi/paths/ingredients.yaml#/ingredient_availability
+  /bowls/build:
+    $ref: ./openapi/paths/bowls.yaml#/bowls_build
+  /bowls/generate:
+    $ref: ./openapi/paths/bowls.yaml#/bowls_generate
+  /saved-bowls:
+    $ref: ./openapi/paths/saved-bowls.yaml#/saved_bowls_collection
+  /saved-bowls/{saved_bowl_id}:
+    $ref: ./openapi/paths/saved-bowls.yaml#/saved_bowl_item
+components:
+  securitySchemes:
+    BearerAuth:
+      $ref: ./openapi/components/security.yaml#/BearerAuth
+  parameters:
+    IngredientId:
+      $ref: ./openapi/components/parameters.yaml#/IngredientId
+    SavedBowlId:
+      $ref: ./openapi/components/parameters.yaml#/SavedBowlId
+    IngredientSearch:
+      $ref: ./openapi/components/parameters.yaml#/IngredientSearch
+    CategoryId:
+      $ref: ./openapi/components/parameters.yaml#/CategoryId
+  responses:
+    InvalidJson:
+      $ref: ./openapi/components/responses.yaml#/InvalidJson
+    InvalidPayload:
+      $ref: ./openapi/components/responses.yaml#/InvalidPayload
+    Unauthorized:
+      $ref: ./openapi/components/responses.yaml#/Unauthorized
+    UserNotFound:
+      $ref: ./openapi/components/responses.yaml#/UserNotFound
+    SavedBowlNotFound:
+      $ref: ./openapi/components/responses.yaml#/SavedBowlNotFound
+  schemas:
+    ErrorResponse:
+      $ref: ./openapi/schemas/common.yaml#/ErrorResponse
+    JwtErrorResponse:
+      $ref: ./openapi/schemas/common.yaml#/JwtErrorResponse
+    MessageResponse:
+      $ref: ./openapi/schemas/common.yaml#/MessageResponse
+    SuccessEnvelope:
+      $ref: ./openapi/schemas/common.yaml#/SuccessEnvelope
+    HealthResponse:
+      $ref: ./openapi/schemas/common.yaml#/HealthResponse
+    User:
+      $ref: ./openapi/schemas/auth.yaml#/User
+    RegisterRequest:
+      $ref: ./openapi/schemas/auth.yaml#/RegisterRequest
+    RegisterResponse:
+      $ref: ./openapi/schemas/auth.yaml#/RegisterResponse
+    LoginRequest:
+      $ref: ./openapi/schemas/auth.yaml#/LoginRequest
+    LoginResponse:
+      $ref: ./openapi/schemas/auth.yaml#/LoginResponse
+    CurrentUserResponse:
+      $ref: ./openapi/schemas/auth.yaml#/CurrentUserResponse
+    UpdateCurrentUserRequest:
+      $ref: ./openapi/schemas/auth.yaml#/UpdateCurrentUserRequest
+    DeactivateUserRequest:
+      $ref: ./openapi/schemas/auth.yaml#/DeactivateUserRequest
+    IngredientCategorySummary:
+      $ref: ./openapi/schemas/category.yaml#/IngredientCategorySummary
+    Category:
+      $ref: ./openapi/schemas/category.yaml#/Category
+    CategoriesResponse:
+      $ref: ./openapi/schemas/category.yaml#/CategoriesResponse
+    IngredientBase:
+      $ref: ./openapi/schemas/ingredient.yaml#/IngredientBase
+    IngredientManagement:
+      $ref: ./openapi/schemas/ingredient.yaml#/IngredientManagement
+    IngredientSelectorOption:
+      $ref: ./openapi/schemas/ingredient.yaml#/IngredientSelectorOption
+    IngredientAvailability:
+      $ref: ./openapi/schemas/ingredient.yaml#/IngredientAvailability
+    IngredientsResponse:
+      $ref: ./openapi/schemas/ingredient.yaml#/IngredientsResponse
+    IngredientResponse:
+      $ref: ./openapi/schemas/ingredient.yaml#/IngredientResponse
+    IngredientMutationResult:
+      $ref: ./openapi/schemas/ingredient.yaml#/IngredientMutationResult
+    CreateIngredientRequest:
+      $ref: ./openapi/schemas/ingredient.yaml#/CreateIngredientRequest
+    RenameIngredientRequest:
+      $ref: ./openapi/schemas/ingredient.yaml#/RenameIngredientRequest
+    SoftDeleteIngredientRequest:
+      $ref: ./openapi/schemas/ingredient.yaml#/SoftDeleteIngredientRequest
+    UpdateAvailabilityRequest:
+      $ref: ./openapi/schemas/ingredient.yaml#/UpdateAvailabilityRequest
+    IngredientAvailabilityResponse:
+      $ref: ./openapi/schemas/ingredient.yaml#/IngredientAvailabilityResponse
+    BowlIngredient:
+      $ref: ./openapi/schemas/bowl.yaml#/BowlIngredient
+    BowlIngredientsByCategory:
+      $ref: ./openapi/schemas/bowl.yaml#/BowlIngredientsByCategory
+    Bowl:
+      $ref: ./openapi/schemas/bowl.yaml#/Bowl
+    BowlResponse:
+      $ref: ./openapi/schemas/bowl.yaml#/BowlResponse
+    BowlsResponse:
+      $ref: ./openapi/schemas/bowl.yaml#/BowlsResponse
+    BuildBowlRequest:
+      $ref: ./openapi/schemas/bowl.yaml#/BuildBowlRequest
+    GenerateBowlsRequest:
+      $ref: ./openapi/schemas/bowl.yaml#/GenerateBowlsRequest
+    DemoGenerateBowlsRequest:
+      $ref: ./openapi/schemas/bowl.yaml#/DemoGenerateBowlsRequest
+    SavedBowlIngredientSnapshot:
+      $ref: ./openapi/schemas/saved-bowl.yaml#/SavedBowlIngredientSnapshot
+    SavedBowl:
+      $ref: ./openapi/schemas/saved-bowl.yaml#/SavedBowl
+    SavedBowlListItem:
+      $ref: ./openapi/schemas/saved-bowl.yaml#/SavedBowlListItem
+    SavedBowlsResponse:
+      $ref: ./openapi/schemas/saved-bowl.yaml#/SavedBowlsResponse
+    SavedBowlResponse:
+      $ref: ./openapi/schemas/saved-bowl.yaml#/SavedBowlResponse
+    CreateSavedBowlRequest:
+      $ref: ./openapi/schemas/saved-bowl.yaml#/CreateSavedBowlRequest
+    WrappedSavedBowlRequest:
+      $ref: ./openapi/schemas/saved-bowl.yaml#/WrappedSavedBowlRequest
+    RenameSavedBowlByNameRequest:
+      $ref: ./openapi/schemas/saved-bowl.yaml#/RenameSavedBowlByNameRequest
+    RenameSavedBowlByCustomNameRequest:
+      $ref: ./openapi/schemas/saved-bowl.yaml#/RenameSavedBowlByCustomNameRequest
+    SoftDeleteSavedBowlRequest:
+      $ref: ./openapi/schemas/saved-bowl.yaml#/SoftDeleteSavedBowlRequest

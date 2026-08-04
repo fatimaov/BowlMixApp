@@ -40,3 +40,7 @@ The frontend communicates with the backend through REST APIs, and the backend ow
 ## Current Project Status
 
 BowlMix is currently in planning and early implementation. The repository documents the intended MVP scope and architecture while development continues.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

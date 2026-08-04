@@ -1,0 +1,115 @@
+User:
+  type: object
+  required: [id, username, email, created_at, is_active]
+  properties:
+    id:
+      type: integer
+    username:
+      type: string
+    email:
+      type: string
+      format: email
+    created_at:
+      type: string
+      format: date-time
+    is_active:
+      type: boolean
+
+RegisterRequest:
+  type: object
+  required: [username, email, password]
+  properties:
+    username:
+      type: string
+      minLength: 3
+    email:
+      type: string
+      format: email
+    password:
+      type: string
+      minLength: 8
+  additionalProperties: false
+
+LoginRequest:
+  type: object
+  required: [email, password]
+  properties:
+    email:
+      type: string
+      format: email
+    password:
+      type: string
+  additionalProperties: false
+
+UpdateCurrentUserRequest:
+  type: object
+  minProperties: 1
+  properties:
+    username:
+      type: string
+      minLength: 3
+    email:
+      type: string
+      format: email
+    current_password:
+      type: string
+    new_password:
+      type: string
+      minLength: 8
+  additionalProperties: false
+
+DeactivateUserRequest:
+  type: object
+  required: [is_active]
+  properties:
+    is_active:
+      type: boolean
+      enum: [false]
+  additionalProperties: false
+
+RegisterResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [user]
+      properties:
+        user:
+          $ref: '#/User'
+
+LoginResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [user, access_token, token_type]
+      properties:
+        user:
+          $ref: '#/User'
+        access_token:
+          type: string
+        token_type:
+          type: string
+          enum: [Bearer]
+
+CurrentUserResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [user]
+      properties:
+        user:
+          $ref: '#/User'

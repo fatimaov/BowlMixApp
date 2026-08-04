@@ -1,0 +1,58 @@
+bowls_build:
+  post:
+    tags: [Bowls]
+    summary: Build a bowl from explicit ingredient selections
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/bowl.yaml#/BuildBowlRequest
+    responses:
+      "200":
+        description: Bowl built successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/bowl.yaml#/BowlResponse
+      "400":
+        description: Selection validation failed
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized
+
+bowls_generate:
+  post:
+    tags: [Bowls]
+    summary: Generate three bowls for the authenticated user
+    description: |
+      Locked ingredients must belong to no more than 3 categories and cannot overlap
+      with excluded ingredients.
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/bowl.yaml#/GenerateBowlsRequest
+    responses:
+      "200":
+        description: Bowls generated successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/bowl.yaml#/BowlsResponse
+      "400":
+        description: Generation validation failed
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized

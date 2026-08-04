@@ -1,0 +1,263 @@
+SavedBowlSnapshotValues:
+  type: object
+  required:
+    - ingredient_name
+    - category_name
+    - category_slug
+    - color_key
+    - shape_family
+    - visual_pattern
+    - sort_order
+  properties:
+    ingredient_name:
+      type: string
+    category_name:
+      type: string
+    category_slug:
+      type: string
+    color_key:
+      type: string
+    shape_family:
+      type: string
+    visual_pattern:
+      type: string
+      enum: [solid, dots, stripes, grid, speckled, ring, split]
+    sort_order:
+      type: integer
+
+SavedBowlIngredientSnapshot:
+  type: object
+  required:
+    - id
+    - saved_bowl_id
+    - ingredient_id
+    - category_id
+    - name
+    - ingredient_name_snapshot
+    - category
+    - visual_pattern
+    - snapshots
+  properties:
+    id:
+      type: integer
+    saved_bowl_id:
+      type: integer
+    ingredient_id:
+      type: integer
+    category_id:
+      type: integer
+    name:
+      type: string
+    ingredient_name_snapshot:
+      type: string
+    category:
+      $ref: ./category.yaml#/Category
+    visual_pattern:
+      type: string
+      enum: [solid, dots, stripes, grid, speckled, ring, split]
+    snapshots:
+      $ref: '#/SavedBowlSnapshotValues'
+
+SavedBowl:
+  type: object
+  required:
+    - id
+    - user_id
+    - name
+    - ai_generated_name
+    - created_at
+    - deleted_at
+    - ingredients
+  properties:
+    id:
+      type: integer
+    user_id:
+      type: integer
+    name:
+      type: string
+    custom_name:
+      type: string
+      nullable: true
+    ai_generated_name:
+      type: string
+    created_at:
+      type: string
+      format: date-time
+    deleted_at:
+      type: string
+      format: date-time
+      nullable: true
+    ingredients:
+      type: array
+      items:
+        $ref: '#/SavedBowlIngredientSnapshot'
+
+SavedBowlListItem:
+  allOf:
+    - $ref: '#/SavedBowl'
+    - type: object
+      required: [ingredient_count]
+      properties:
+        ingredient_count:
+          type: integer
+
+SavedBowlsResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [saved_bowls]
+      properties:
+        saved_bowls:
+          type: array
+          items:
+            $ref: '#/SavedBowlListItem'
+
+SavedBowlResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [saved_bowl]
+      properties:
+        saved_bowl:
+          $ref: '#/SavedBowl'
+
+SavedBowlIngredientRef:
+  type: object
+  properties:
+    id:
+      type: integer
+    ingredient_id:
+      type: integer
+  anyOf:
+    - required: [id]
+    - required: [ingredient_id]
+  additionalProperties: false
+
+SavedBowlIngredientRefsByCategory:
+  type: object
+  minProperties: 1
+  properties:
+    bases:
+      type: array
+      items:
+        oneOf:
+          - type: integer
+          - $ref: '#/SavedBowlIngredientRef'
+    proteins:
+      type: array
+      items:
+        oneOf:
+          - type: integer
+          - $ref: '#/SavedBowlIngredientRef'
+    vegetables:
+      type: array
+      items:
+        oneOf:
+          - type: integer
+          - $ref: '#/SavedBowlIngredientRef'
+    toppings:
+      type: array
+      items:
+        oneOf:
+          - type: integer
+          - $ref: '#/SavedBowlIngredientRef'
+    crunch_elements:
+      type: array
+      items:
+        oneOf:
+          - type: integer
+          - $ref: '#/SavedBowlIngredientRef'
+    sauces:
+      type: array
+      items:
+        oneOf:
+          - type: integer
+          - $ref: '#/SavedBowlIngredientRef'
+    extras:
+      type: array
+      items:
+        oneOf:
+          - type: integer
+          - $ref: '#/SavedBowlIngredientRef'
+
+CreateSavedBowlRequest:
+  type: object
+  required: [ingredients]
+  properties:
+    ai_generated_name:
+      type: string
+      maxLength: 120
+    name:
+      type: string
+      maxLength: 120
+    custom_name:
+      type: string
+      maxLength: 120
+      nullable: true
+    ingredients:
+      $ref: '#/SavedBowlIngredientRefsByCategory'
+  oneOf:
+    - required: [ai_generated_name]
+    - required: [name]
+
+WrappedSavedBowlRequest:
+  type: object
+  required: [bowl]
+  properties:
+    ai_generated_name:
+      type: string
+      maxLength: 120
+    name:
+      type: string
+      maxLength: 120
+    custom_name:
+      type: string
+      maxLength: 120
+      nullable: true
+    bowl:
+      type: object
+      required: [ingredients]
+      properties:
+        ingredients:
+          $ref: '#/SavedBowlIngredientRefsByCategory'
+      additionalProperties: true
+  oneOf:
+    - required: [ai_generated_name]
+    - required: [name]
+
+RenameSavedBowlByNameRequest:
+  type: object
+  required: [name]
+  properties:
+    name:
+      type: string
+      maxLength: 120
+  additionalProperties: false
+
+RenameSavedBowlByCustomNameRequest:
+  type: object
+  required: [custom_name]
+  properties:
+    custom_name:
+      type: string
+      maxLength: 120
+  additionalProperties: false
+
+SoftDeleteSavedBowlRequest:
+  type: object
+  required: [deleted_at]
+  properties:
+    deleted_at:
+      type: boolean
+      enum: [true]
+  additionalProperties: false

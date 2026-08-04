@@ -1,0 +1,26 @@
+demo_generate_bowls:
+  post:
+    tags: [Demo]
+    summary: Generate public demo bowls
+    description: |
+      Generates three public demo bowls using active default ingredients only.
+      Request options are not currently supported.
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/bowl.yaml#/DemoGenerateBowlsRequest
+    responses:
+      "200":
+        description: Demo bowls generated successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/bowl.yaml#/BowlsResponse
+      "400":
+        description: Unsupported request body or generation validation error
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse

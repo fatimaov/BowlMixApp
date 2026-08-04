@@ -2,9 +2,9 @@
 
 API-only Flask backend for BowlMix. The backend owns authentication, persistence, ingredient personalization, deterministic bowl generation, and saved bowl snapshots. It does not serve the React frontend.
 
-Current route coverage includes health, public demo generation, auth, public category metadata, authenticated ingredient management, authenticated bowl build/generate endpoints, and authenticated saved bowl list/create/update endpoints.
+Current route coverage includes health, public demo generation, auth, categories, authenticated ingredient management, authenticated bowl build/generate, and authenticated saved bowl list/create/update.
 
-## Implemented So Far
+## Features
 
 - Flask app factory, config, CORS, SQLAlchemy, migrations, JWT setup, and Flask-Admin wiring.
 - PostgreSQL models and migrations for users, categories, ingredients, user ingredient availability, saved bowls, and saved bowl ingredient snapshots.
@@ -15,8 +15,9 @@ Current route coverage includes health, public demo generation, auth, public cat
 - Ingredient management service for My Ingredients, selector options, custom ingredient create/update, and custom ingredient soft deletion.
 - Availability service for user-specific `UserIngredient.is_available` updates.
 - Saved bowl service and snapshot service for saving bowls with stable ingredient/category visual snapshots plus server-side save validation.
+- OpenAPI spec serving plus Swagger UI docs for local API exploration at `/openapi.yaml` and `/api/docs/`.
 
-Not implemented yet:
+Not implemented:
 
 - AI API routes.
 - Frontend integration.
@@ -88,6 +89,14 @@ pipenv run start
 
 The default local API URL is `http://127.0.0.1:5000`.
 
+## API Docs
+
+Once the backend is running locally:
+
+- OpenAPI spec: `http://127.0.0.1:5000/openapi.yaml`
+- Swagger UI: `http://127.0.0.1:5000/api/docs/`
+
+Referenced OpenAPI assets are served from `backend/docs/openapi/`.
 
 ## Common Commands
 
@@ -116,6 +125,16 @@ Expected:
 { "service": "bowlmix-api", "status": "ok" }
 ```
 
+OpenAPI docs:
+
+```bash
+curl http://127.0.0.1:5000/openapi.yaml
+```
+
+Swagger UI:
+
+Open `http://127.0.0.1:5000/api/docs/` in a browser.
+
 Compile backend Python files:
 
 ```bash
@@ -134,16 +153,14 @@ from app.services.public_demo_service import generate_public_demo_bowls
 generate_public_demo_bowls()
 ```
 
-Postman happy-flow verification:
+## Testing
 
-- A Postman happy-flow run covering public demo generation, auth, categories, ingredients, bowls, saved bowls, and password change passed successfully on August 3, 2026.
-- Supporting test documentation is available at [public-docs/testing/api-happy-flow.md](../public-docs/testing/api-happy-flow.md).
-
-Postman edge-case verification:
-
-- A documented Postman edge-case run covering auth, demo, categories, ingredients, bowls, and saved bowls passed successfully on August 3, 2026.
-- Supporting test documentation is available at [public-docs/testing/api-edge-cases.md](../public-docs/testing/api-edge-cases.md).
-- Additional smoke tests and ad hoc manual checks were also performed during development, but are not fully itemized in the Postman test docs.
+- Postman happy-flow verification passed successfully on August 3, 2026.
+- Postman edge-case verification passed successfully for the documented scenarios on August 3, 2026.
+- Supporting docs:
+  - [public-docs/testing/api-happy-flow.md](../public-docs/testing/api-happy-flow.md)
+  - [public-docs/testing/api-edge-cases.md](../public-docs/testing/api-edge-cases.md)
+- Additional smoke tests and ad hoc manual checks were also performed during development, but are not fully itemized in the Postman docs.
 
 ## Service Map
 
@@ -161,25 +178,10 @@ Postman edge-case verification:
 
 ## Database Notes
 
-Saved bowl ingredients are snapshots. When a bowl is saved, the backend copies ingredient name, category name, category slug, category color key, category shape family, visual pattern, and category sort order into `saved_bowl_ingredients`.
-
-This keeps saved bowls stable even if ingredients, categories, or visual metadata change later.
-
-Saved bowl create requests are also validated server-side before snapshot creation. The backend resolves submitted ingredient IDs against the current user's available ingredients, rejects invalid or unavailable IDs, and validates the final bowl composition against the shared category min/max rules.
-
-Default ingredients are stored once in `ingredients` and are treated as available for every user unless a user-specific override exists. `user_ingredients` stores only per-user availability overrides and custom-ingredient availability, so a row is created when a user toggles an ingredient instead of pre-populating default rows for every account.
+- Saved bowl ingredients are snapshots. When a bowl is saved, the backend copies ingredient and category display metadata into `saved_bowl_ingredients` so saved bowls remain stable even if source data changes later.
+- Saved bowl create requests are validated server-side before snapshot creation. Submitted ingredient IDs must belong to valid available ingredients for the current user and must satisfy the shared category min/max rules.
+- Default ingredients are stored once in `ingredients` and are treated as available for every user unless a user-specific override exists. `user_ingredients` stores only per-user availability overrides and custom-ingredient availability.
 
 ## Admin
 
 Flask-Admin is available for local model inspection once the app is running. Registered models include users, ingredient categories, ingredients, user ingredient availability records, saved bowls, and saved bowl ingredient snapshots.
-
-## Recent Implementation Summary
-
-- Added authenticated ingredient routes for `GET /api/ingredients`, `POST /api/ingredients`, `PATCH /api/ingredients/<id>`, and `PATCH /api/ingredients/<id>/availability`.
-- Added public category metadata route `GET /api/categories` for shared category labels, ordering, styling metadata, and approved visual patterns used across public and authenticated frontend flows.
-- Added authenticated bowl routes for `POST /api/bowls/build` and `POST /api/bowls/generate` backed by the implemented Build Mode and Generate Mode services.
-- Added authenticated saved bowl routes `GET /api/saved-bowls`, `POST /api/saved-bowls`, and `PATCH /api/saved-bowls/<id>` for listing, creating, renaming, and soft-deleting the current user's saved bowls.
-- Added server-side saved bowl validation so save requests must reference valid available ingredient IDs for the current user and satisfy shared bowl composition rules.
-- Added `POST /api/demo/bowls/generate` for public demo bowl generation with active default ingredients.
-- Added auth routes for `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`, and `PATCH /api/auth/me`.
-- Added Black as a backend dev package and applied formatting updates.

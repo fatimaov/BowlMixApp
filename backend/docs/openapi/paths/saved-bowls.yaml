@@ -1,0 +1,89 @@
+saved_bowls_collection:
+  get:
+    tags: [Saved Bowls]
+    summary: List saved bowls for the authenticated user
+    security:
+      - BearerAuth: []
+    responses:
+      "200":
+        description: Saved bowls retrieved successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/saved-bowl.yaml#/SavedBowlsResponse
+      "400":
+        description: Saved bowl fetch error
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized
+  post:
+    tags: [Saved Bowls]
+    summary: Save a bowl snapshot
+    description: |
+      The backend accepts either a top-level `ingredients` object or a wrapped
+      `bowl.ingredients` object. `ai_generated_name` may also be provided as `name`.
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../schemas/saved-bowl.yaml#/CreateSavedBowlRequest
+              - $ref: ../schemas/saved-bowl.yaml#/WrappedSavedBowlRequest
+    responses:
+      "201":
+        description: Saved bowl created successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/saved-bowl.yaml#/SavedBowlResponse
+      "400":
+        description: Validation error while saving the bowl
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized
+
+saved_bowl_item:
+  patch:
+    tags: [Saved Bowls]
+    summary: Rename or soft delete a saved bowl
+    security:
+      - BearerAuth: []
+    parameters:
+      - $ref: ../components/parameters.yaml#/SavedBowlId
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ../schemas/saved-bowl.yaml#/RenameSavedBowlByNameRequest
+              - $ref: ../schemas/saved-bowl.yaml#/RenameSavedBowlByCustomNameRequest
+              - $ref: ../schemas/saved-bowl.yaml#/SoftDeleteSavedBowlRequest
+    responses:
+      "200":
+        description: Saved bowl updated or deleted successfully
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: ../schemas/saved-bowl.yaml#/SavedBowlResponse
+                - $ref: ../schemas/common.yaml#/MessageResponse
+      "400":
+        description: Invalid update payload
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized
+      "404":
+        $ref: ../components/responses.yaml#/SavedBowlNotFound

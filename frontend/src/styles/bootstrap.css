@@ -1,0 +1,11 @@
+:root {
+  --bs-primary: #198754;
+  --bs-primary-rgb: 25, 135, 84;
+  --bs-body-bg: #f8fafc;
+  --bs-body-color: #111827;
+  --bs-border-radius: 1rem;
+  --bs-border-radius-sm: 0.75rem;
+  --bs-border-radius-lg: 1.25rem;
+  --bs-font-sans-serif:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}

@@ -1,6 +1,7 @@
 .app {
   min-height: 100vh;
-  padding: 2rem;
+  display: flex;
+  align-items: stretch;
 }
 
 .app__shell {
@@ -16,5 +17,9 @@
 
 .app__shell p {
   margin: 0;
-  color: #4b5563;
+}
+
+.app__badge {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }

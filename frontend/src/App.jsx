@@ -3,10 +3,17 @@ import './App.css'
 function App() {
   return (
     <main className="app">
-      <section className="app__shell">
-        <h1>Frontend</h1>
-        <p>Ready for implementation.</p>
-      </section>
+      <div className="container py-5">
+        <section className="app__shell card border-0 shadow-sm">
+          <div className="card-body p-4 p-md-5">
+            <span className="badge text-bg-primary app__badge">Bootstrap ready</span>
+            <h1 className="mt-3">Frontend</h1>
+            <p className="mb-0 text-body-secondary">
+              Bootstrap is wired globally and ready for implementation.
+            </p>
+          </div>
+        </section>
+      </div>
     </main>
   )
 }

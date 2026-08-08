@@ -34,6 +34,7 @@ Not implemented:
 - `FLASK_APP`: Flask entry point
 - `FLASK_ENV`: environment label
 - `ENABLE_ADMIN`: set to a truthy value like `1` or `true` to expose Flask-Admin only when `FLASK_ENV=development`
+- `ENABLE_SWAGGER_TRY_OUT`: set to a truthy value like `1` or `true` to enable Swagger UI `Try it out`; defaults to enabled in development and disabled otherwise
 - `FLASK_SECRET_KEY`: app secret used by Flask through `Config.SECRET_KEY`
 - `JWT_SECRET_KEY`: JWT signing key
 - `DATABASE_URL`: PostgreSQL SQLAlchemy connection string
@@ -61,6 +62,7 @@ pipenv install
 FLASK_APP=run.py
 FLASK_ENV=development
 ENABLE_ADMIN=true
+ENABLE_SWAGGER_TRY_OUT=true
 FLASK_SECRET_KEY=your-flask-secret-key
 JWT_SECRET_KEY=change-me-too
 DATABASE_URL=postgresql://username:password@localhost:5432/bowlmix
@@ -89,12 +91,22 @@ pipenv run start
 
 The default local API URL is `http://127.0.0.1:5000`.
 
+For a production-style WSGI launch on Linux, use Gunicorn with the Flask app exposed by `run.py`:
+
+```bash
+pipenv run gunicorn run:app
+```
+
+`pipenv run start` runs the built-in Flask development server. Gunicorn is intended for Unix-like environments and will not run on native Windows because it depends on Unix-only modules.
+
 ## API Docs
 
 Once the backend is running locally:
 
 - OpenAPI spec: `http://127.0.0.1:5000/openapi.yaml`
 - Swagger UI: `http://127.0.0.1:5000/api/docs/`
+
+Swagger UI `Try it out` is enabled when `ENABLE_SWAGGER_TRY_OUT=true`. If the variable is unset, it defaults to enabled for `FLASK_ENV=development` and disabled otherwise.
 
 Referenced OpenAPI assets are served from `backend/docs/openapi/`.
 
@@ -104,6 +116,7 @@ Run from `backend/`.
 
 ```bash
 pipenv run start
+pipenv run gunicorn run:app
 pipenv run command shell
 pipenv run migrate -m "Describe model change"
 pipenv run upgrade

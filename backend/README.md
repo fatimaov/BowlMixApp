@@ -89,6 +89,14 @@ pipenv run start
 
 The default local API URL is `http://127.0.0.1:5000`.
 
+For a production-style WSGI launch on Linux, use Gunicorn with the Flask app exposed by `run.py`:
+
+```bash
+pipenv run gunicorn run:app
+```
+
+`pipenv run start` runs the built-in Flask development server. Gunicorn is intended for Unix-like environments and will not run on native Windows because it depends on Unix-only modules.
+
 ## API Docs
 
 Once the backend is running locally:
@@ -104,6 +112,7 @@ Run from `backend/`.
 
 ```bash
 pipenv run start
+pipenv run gunicorn run:app
 pipenv run command shell
 pipenv run migrate -m "Describe model change"
 pipenv run upgrade

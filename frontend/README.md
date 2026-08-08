@@ -5,9 +5,10 @@ React + Vite frontend for BowlMix with Bootstrap wired globally and React Router
 Current baseline:
 
 - global Bootstrap CSS/JS plus lightweight theme overrides
-- centralized router with demo, auth, dashboard, ingredients, saved bowls, profile, and not-found routes
+- TypeScript-ready Vite setup with `.tsx` entry, app, router, and page files
+- centralized router with landing, public demo, auth, generator dashboard, my ingredients, saved bowls, profile, and not-found routes
 - protected route gate using a temporary local token check (`bowlmix_user_token`)
-- architecture-aligned `src/` folder structure ready for implementation
+- folder-based `src/pages/<PageName>/index.tsx` structure ready for implementation
 
 ## Scripts
 

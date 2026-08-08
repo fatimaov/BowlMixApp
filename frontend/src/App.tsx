@@ -13,7 +13,10 @@ function App() {
             </div>
             <nav aria-label="Primary" className="app__nav nav nav-pills flex-wrap gap-2">
               <NavLink to="/" end className={({ isActive }) => appNavLinkClassName(isActive)}>
-                Demo
+                Landing
+              </NavLink>
+              <NavLink to="/demo" className={({ isActive }) => appNavLinkClassName(isActive)}>
+                Public Demo
               </NavLink>
               <NavLink to="/login" className={({ isActive }) => appNavLinkClassName(isActive)}>
                 Login
@@ -22,16 +25,16 @@ function App() {
                 Sign Up
               </NavLink>
               <NavLink
-                to="/app/dashboard"
+                to="/app/generator-dashboard"
                 className={({ isActive }) => appNavLinkClassName(isActive)}
               >
-                Dashboard
+                Generator
               </NavLink>
               <NavLink
-                to="/app/ingredients"
+                to="/app/my-ingredients"
                 className={({ isActive }) => appNavLinkClassName(isActive)}
               >
-                Ingredients
+                My Ingredients
               </NavLink>
               <NavLink
                 to="/app/saved-bowls"
@@ -61,7 +64,7 @@ function App() {
   )
 }
 
-function appNavLinkClassName(isActive) {
+function appNavLinkClassName(isActive: boolean) {
   return `nav-link ${isActive ? 'active' : 'text-body-secondary'}`
 }
 

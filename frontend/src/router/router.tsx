@@ -1,14 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom'
-import App from '../App.jsx'
-import DashboardPage from '../pages/DashboardPage.jsx'
-import IngredientsPage from '../pages/IngredientsPage.jsx'
-import LandingPage from '../pages/LandingPage.jsx'
-import LoginPage from '../pages/LoginPage.jsx'
-import NotFoundPage from '../pages/NotFoundPage.jsx'
-import ProfilePage from '../pages/ProfilePage.jsx'
-import SavedBowlsPage from '../pages/SavedBowlsPage.jsx'
-import SignupPage from '../pages/SignupPage.jsx'
-import ProtectedRoute from './ProtectedRoute.jsx'
+import App from '../App'
+import GeneratorDashboardPage from '../pages/GeneratorDashboard'
+import LandingPage from '../pages/Landing'
+import LoginPage from '../pages/Login'
+import MyIngredientsPage from '../pages/MyIngredients'
+import NotFoundPage from '../pages/NotFound'
+import ProfilePage from '../pages/Profile'
+import PublicDemoPage from '../pages/PublicDemo'
+import SavedBowlsPage from '../pages/SavedBowls'
+import SignupPage from '../pages/Signup'
+import ProtectedRoute from './ProtectedRoute'
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <LandingPage />,
+      },
+      {
+        path: 'demo',
+        element: <PublicDemoPage />,
       },
       {
         path: 'login',
@@ -32,12 +37,12 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
           {
-            path: 'dashboard',
-            element: <DashboardPage />,
+            path: 'generator-dashboard',
+            element: <GeneratorDashboardPage />,
           },
           {
-            path: 'ingredients',
-            element: <IngredientsPage />,
+            path: 'my-ingredients',
+            element: <MyIngredientsPage />,
           },
           {
             path: 'saved-bowls',

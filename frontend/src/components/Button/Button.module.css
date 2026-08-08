@@ -1,0 +1,73 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease,
+    opacity 160ms ease;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.primary {
+  background-color: #1f6fff;
+  border-color: #1f6fff;
+  color: #ffffff;
+}
+
+.secondary {
+  background-color: #ffffff;
+  border-color: #c8d1dc;
+  color: #17324d;
+}
+
+.tertiary {
+  background-color: transparent;
+  border-color: transparent;
+  color: #17324d;
+}
+
+.ai {
+  background-color: #111827;
+  border-color: #111827;
+  color: #f5f7fb;
+}
+
+.sizeL {
+  min-height: 3rem;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+}
+
+.sizeM {
+  min-height: 2.5rem;
+  padding: 0 1.25rem;
+  font-size: 0.95rem;
+}
+
+.sizeS {
+  min-height: 2rem;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+}

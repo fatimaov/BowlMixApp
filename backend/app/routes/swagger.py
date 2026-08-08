@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flask import Blueprint, send_from_directory
+from flask import Blueprint, redirect, send_from_directory
 from flask_swagger_ui import get_swaggerui_blueprint
 
 DOCS_DIR = Path(__file__).resolve().parents[2] / "docs"
@@ -22,6 +22,11 @@ swagger_ui_bp = get_swaggerui_blueprint(
 @openapi_docs_bp.get("/openapi.yaml")
 def get_root_openapi_spec():
     return send_from_directory(OPENAPI_DIR, "openapi.yaml", mimetype="application/yaml")
+
+
+@openapi_docs_bp.get("/")
+def redirect_root_to_docs():
+    return redirect(SWAGGER_URL)
 
 
 @openapi_docs_bp.get("/openapi/<path:filename>")

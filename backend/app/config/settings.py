@@ -8,6 +8,15 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 load_dotenv(BASE_DIR / ".env")
 
 
+def get_bool_env(name, default=False):
+    value = os.getenv(name)
+
+    if value is None:
+        return default
+
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
 def get_database_url():
     database_url = os.getenv("DATABASE_URL")
 
@@ -28,6 +37,10 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=30)
     SQLALCHEMY_DATABASE_URI = get_database_url()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    ENABLE_SWAGGER_TRY_OUT = get_bool_env(
+        "ENABLE_SWAGGER_TRY_OUT",
+        default=os.getenv("FLASK_ENV", "").strip().lower() == "development",
+    )
     CORS_ORIGINS = [
         origin.strip()
         for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")

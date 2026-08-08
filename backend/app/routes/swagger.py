@@ -3,6 +3,8 @@ from pathlib import Path
 from flask import Blueprint, redirect, send_from_directory
 from flask_swagger_ui import get_swaggerui_blueprint
 
+from app.config.settings import Config
+
 DOCS_DIR = Path(__file__).resolve().parents[2] / "docs"
 OPENAPI_DIR = DOCS_DIR / "openapi"
 SWAGGER_URL = "/api/docs"
@@ -10,12 +12,17 @@ OPENAPI_URL = "/openapi.yaml"
 
 openapi_docs_bp = Blueprint("openapi_docs", __name__)
 
+swagger_ui_config = {
+    "app_name": "BowlMix API Docs",
+}
+
+if not Config.ENABLE_SWAGGER_TRY_OUT:
+    swagger_ui_config["supportedSubmitMethods"] = []
+
 swagger_ui_bp = get_swaggerui_blueprint(
     SWAGGER_URL,
     OPENAPI_URL,
-    config={
-        "app_name": "BowlMix API Docs",
-    },
+    config=swagger_ui_config,
 )
 
 

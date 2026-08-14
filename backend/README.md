@@ -194,6 +194,12 @@ generate_public_demo_bowls()
 - Saved bowl create requests are validated server-side before snapshot creation. Submitted ingredient IDs must belong to valid available ingredients for the current user and must satisfy the shared category min/max rules.
 - Default ingredients are stored once in `ingredients` and are treated as available for every user unless a user-specific override exists. `user_ingredients` stores only per-user availability overrides and custom-ingredient availability.
 
+## Supabase Keep-Alive
+
+Supabase Free Tier projects may pause after inactivity. The GitHub Actions workflow keeps the production database active by inserting a timestamped row into the dedicated `keep_alive_logs` table. This runs directly against Supabase, so it does not wake the Render backend, create fake users, or pollute BowlMix product tables.
+
+`keep_alive_logs` is maintenance metadata created manually in Supabase with raw SQL. It is intentionally outside the Flask-SQLAlchemy models and Alembic migrations. The workflow connects with the GitHub repository secret `SUPABASE_DATABASE_URL`; never commit this secret or any database credentials. It runs on schedule and can also be started manually from GitHub Actions.
+
 ## Admin
 
 Flask-Admin is available for local model inspection once the app is running. Registered models include users, ingredient categories, ingredients, user ingredient availability records, saved bowls, and saved bowl ingredient snapshots.

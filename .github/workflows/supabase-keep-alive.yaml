@@ -1,0 +1,24 @@
+# Name shown in the GitHub Actions tab
+name: Supabase Keep Alive
+
+# Defines when the workflow runs
+on:
+  # Runs automatically on a schedule using cron syntax
+  schedule:
+    # Mondays and Thursdays at 08:00 UTC
+    # In Spain this is usually 09:00 or 10:00 depending on daylight saving time
+    - cron: "0 8 * * 1,4"
+
+  # Allows you to run the workflow manually from GitHub Actions
+  workflow_dispatch:
+
+jobs:
+  # Internal job name
+  keep-alive:
+    # GitHub will run this job on a temporary Ubuntu machine
+    runs-on: ubuntu-latest
+
+    steps:
+      # First test step: confirms psql is available in the runner
+      - name: Check psql version
+        run: psql --version

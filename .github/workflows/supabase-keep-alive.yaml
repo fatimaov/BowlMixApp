@@ -7,7 +7,7 @@ on:
   schedule:
     # Mondays and Thursdays at 08:00 UTC
     # In Spain this is usually 09:00 or 10:00 depending on daylight saving time
-    - cron: "0 8 * * 1,4"
+    - cron: "0 8,19 * * *"
 
   # Allows you to run the workflow manually from GitHub Actions
   workflow_dispatch:

@@ -45,9 +45,9 @@ DEFAULT_BOWL_NAME = "Bowl Mix"
 
 
 def generate_bowl_name(bowl):
-    ai_name = _try_generate_ai_bowl_name(bowl)
-    if ai_name:
-        return ai_name
+    ai_names = _try_generate_ai_bowl_names(bowl)
+    if ai_names:
+        return ai_names[0]
 
     name = generate_rule_based_bowl_name(bowl)
     return name or DEFAULT_BOWL_NAME
@@ -56,25 +56,37 @@ def generate_bowl_name(bowl):
 def generate_unique_bowl_name(bowl, used_names):
     used_names = set(used_names or [])
 
-    ai_name = _try_generate_ai_bowl_name(bowl)
-    if ai_name and ai_name not in used_names:
-        return ai_name
+    for ai_name in _try_generate_ai_bowl_names(bowl):
+        if ai_name not in used_names:
+            return ai_name
 
-    possible_names = build_possible_names()
-    available_names = [name for name in possible_names if name not in used_names]
+    return _generate_unique_fallback_name(bowl, used_names)
 
-    if available_names:
-        return random.choice(available_names)
 
-    fallback_name = generate_bowl_name(bowl)
-    if fallback_name not in used_names:
-        return fallback_name
+def generate_unique_bowl_names(bowls):
+    """Generate names for a batch of bowls with one AI request."""
+    bowls = bowls or []
+    ai_names = _try_generate_ai_name_candidates(bowls)
+    used_names = set()
+    names = []
 
-    suffix = 2
-    while f"{fallback_name} {suffix}" in used_names:
-        suffix += 1
+    for index, bowl in enumerate(bowls):
+        pair = ai_names[index * 2 : index * 2 + 2]
+        name = next(
+            (
+                candidate
+                for candidate in pair
+                if candidate and candidate not in used_names
+            ),
+            None,
+        )
+        if name is None:
+            name = _generate_unique_fallback_name(bowl, used_names)
 
-    return f"{fallback_name} {suffix}"
+        names.append(name)
+        used_names.add(name)
+
+    return names
 
 
 def generate_rule_based_bowl_name(bowl):
@@ -89,33 +101,93 @@ def build_possible_names():
     ]
 
 
-def _try_generate_ai_bowl_name(bowl):
+def _try_generate_ai_bowl_names(bowl):
+    candidates = _try_generate_ai_name_candidates(bowl)
+    return list(dict.fromkeys(candidate for candidate in candidates if candidate))
+
+
+def _try_generate_ai_name_candidates(bowl):
     try:
         prompt = _build_bowl_name_prompt(bowl)
         result = generate_ai_bowl_name(prompt)
     except Exception:
-        return None
+        return []
 
     if not isinstance(result, dict) or not result.get("success"):
-        return None
+        return []
 
-    candidate = result.get("text")
-    if not isinstance(candidate, str):
-        return None
+    text = result.get("text")
+    if not isinstance(text, str):
+        return []
 
-    candidate = candidate.strip()
-    if not candidate or len(candidate) > 80 or "\n" in candidate:
-        return None
+    try:
+        candidates = json.loads(text)
+    except json.JSONDecodeError:
+        return []
+
+    if not isinstance(candidates, list):
+        return []
+
+    valid_names = []
+    for candidate in candidates[:6]:
+        if not isinstance(candidate, str):
+            valid_names.append(None)
+            continue
+
+        candidate = candidate.strip()
+        if (
+            not candidate
+            or len(candidate) > 80
+            or "\n" in candidate
+        ):
+            valid_names.append(None)
+            continue
+
+        valid_names.append(candidate)
+
+    return valid_names
 
 
-    return candidate
+def _generate_unique_fallback_name(bowl, used_names):
+    possible_names = build_possible_names()
+    available_names = [name for name in possible_names if name not in used_names]
+
+    if available_names:
+        return random.choice(available_names)
+
+    fallback_name = generate_rule_based_bowl_name(bowl)
+    if fallback_name not in used_names:
+        return fallback_name
+
+    suffix = 2
+    while f"{fallback_name} {suffix}" in used_names:
+        suffix += 1
+
+    return f"{fallback_name} {suffix}"
 
 
-def _build_bowl_name_prompt(bowl):
-    ingredients = bowl.get("ingredients", {}) if isinstance(bowl, dict) else {}
+def _build_bowl_name_prompt(bowls):
+    if isinstance(bowls, list):
+        ingredients = [
+            bowl.get("ingredients", {})
+            for bowl in bowls
+            if isinstance(bowl, dict)
+        ]
+        context = (
+            "Names 1 and 2 must belong to Bowl 1, names 3 and 4 to Bowl 2, "
+            "and names 5 and 6 to Bowl 3."
+        )
+    else:
+        ingredients = (
+            bowls.get("ingredients", {}) if isinstance(bowls, dict) else {}
+        )
+        context = "All six names must be suitable for this bowl."
+
     return (
-        "Create one playful, lightweight bowl name. Use the ingredients as "
-        "inspiration, but do not make the name recipe-like. Return only the "
-        "name, with no quotation marks or explanation.\n\n"
+        "Create 6 playful, lightweight bowl name candidates. Use the "
+        "provided ingredients as inspiration, but do not make the names "
+        "recipe-like. "
+        "Return only a valid JSON array of 6 strings, with no markdown, "
+        f"quotation wrapper, or explanation. {context}\n\n"
         f"Bowl ingredients:\n{json.dumps(ingredients, ensure_ascii=False)}"
     )

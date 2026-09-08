@@ -1,7 +1,7 @@
 import random
 from collections import defaultdict
 
-from app.services.bowl_name_service import generate_unique_bowl_name
+from app.services.bowl_name_service import generate_unique_bowl_names
 from app.services.bowl_validation_service import (
     CATEGORY_RULES,
     get_ingredient_category_key,
@@ -57,7 +57,6 @@ def generate_generate_mode_bowls(
     )
 
     bowls = []
-    used_names = set()
     for _ in range(3):
         bowl_ingredients = {}
 
@@ -77,17 +76,13 @@ def generate_generate_mode_bowls(
                 serialize_ingredient(ingredient) for ingredient in selected_ingredients
             ]
 
-        bowl = {"ingredients": bowl_ingredients}
-        bowl["name"] = generate_unique_bowl_name(bowl, used_names)
-        used_names.add(bowl["name"])
-        bowls.append(
-            {
-                "name": bowl["name"],
-                "ingredients": bowl["ingredients"],
-            }
-        )
+        bowls.append({"ingredients": bowl_ingredients})
 
-    return bowls
+    names = generate_unique_bowl_names(bowls)
+    return [
+        {"name": name, "ingredients": bowl["ingredients"]}
+        for bowl, name in zip(bowls, names)
+    ]
 
 
 def group_ingredients_by_category(ingredient_pool):

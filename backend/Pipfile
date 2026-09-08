@@ -16,6 +16,7 @@ flask-admin = "*"
 email-validator = "*"
 flask-swagger-ui = "*"
 gunicorn = "*"
+requests = "*"
 
 [scripts]
 start = "python run.py"

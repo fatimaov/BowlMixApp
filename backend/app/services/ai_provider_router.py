@@ -8,7 +8,7 @@ from app.services.ai_providers import (
 )
 
 
-def generate_ai_bowl_name(bowl):
+def generate_ai_bowl_name(prompt):
     """Route bowl-name generation to the configured provider.
 
     ``mock`` (and missing or unsupported configuration) deliberately returns
@@ -17,9 +17,9 @@ def generate_ai_bowl_name(bowl):
     provider = os.getenv("AI_PROVIDER", "mock").strip().lower()
 
     if provider == "gemini":
-        return generate_gemini_bowl_name(bowl)
+        return generate_gemini_bowl_name(prompt)
 
     if provider == "local":
-        return generate_local_bowl_name(bowl)
+        return generate_local_bowl_name(prompt)
 
     return None

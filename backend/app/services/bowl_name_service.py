@@ -1,3 +1,4 @@
+import json
 import random
 
 from app.services.ai_provider_router import generate_ai_bowl_name
@@ -90,10 +91,15 @@ def build_possible_names():
 
 def _try_generate_ai_bowl_name(bowl):
     try:
-        candidate = generate_ai_bowl_name(bowl)
+        prompt = _build_bowl_name_prompt(bowl)
+        result = generate_ai_bowl_name(prompt)
     except Exception:
         return None
 
+    if not isinstance(result, dict) or not result.get("success"):
+        return None
+
+    candidate = result.get("text")
     if not isinstance(candidate, str):
         return None
 
@@ -101,4 +107,15 @@ def _try_generate_ai_bowl_name(bowl):
     if not candidate or len(candidate) > 80 or "\n" in candidate:
         return None
 
+
     return candidate
+
+
+def _build_bowl_name_prompt(bowl):
+    ingredients = bowl.get("ingredients", {}) if isinstance(bowl, dict) else {}
+    return (
+        "Create one playful, lightweight bowl name. Use the ingredients as "
+        "inspiration, but do not make the name recipe-like. Return only the "
+        "name, with no quotation marks or explanation.\n\n"
+        f"Bowl ingredients:\n{json.dumps(ingredients, ensure_ascii=False)}"
+    )

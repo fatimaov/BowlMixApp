@@ -1,5 +1,7 @@
 import random
 
+from app.services.ai_provider_router import generate_ai_bowl_name
+
 NAME_ADJECTIVES = (
     "Bright",
     "Crisp",
@@ -42,12 +44,21 @@ DEFAULT_BOWL_NAME = "Bowl Mix"
 
 
 def generate_bowl_name(bowl):
+    ai_name = _try_generate_ai_bowl_name(bowl)
+    if ai_name:
+        return ai_name
+
     name = generate_rule_based_bowl_name(bowl)
     return name or DEFAULT_BOWL_NAME
 
 
 def generate_unique_bowl_name(bowl, used_names):
     used_names = set(used_names or [])
+
+    ai_name = _try_generate_ai_bowl_name(bowl)
+    if ai_name and ai_name not in used_names:
+        return ai_name
+
     possible_names = build_possible_names()
     available_names = [name for name in possible_names if name not in used_names]
 
@@ -75,3 +86,19 @@ def build_possible_names():
     return [
         f"{adjective} {noun}" for adjective in NAME_ADJECTIVES for noun in NAME_NOUNS
     ]
+
+
+def _try_generate_ai_bowl_name(bowl):
+    try:
+        candidate = generate_ai_bowl_name(bowl)
+    except Exception:
+        return None
+
+    if not isinstance(candidate, str):
+        return None
+
+    candidate = candidate.strip()
+    if not candidate or len(candidate) > 80 or "\n" in candidate:
+        return None
+
+    return candidate

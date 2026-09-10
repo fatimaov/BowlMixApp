@@ -4,6 +4,8 @@ The future pairing-suggestions route should remain thin and delegate its
 business logic to this service.
 """
 
+import random
+
 from app.services.bowl_validation_service import (
     CATEGORY_RULES,
     CATEGORY_SLUG_OUTPUT_KEYS,
@@ -55,7 +57,9 @@ def build_pairing_suggestion_context(
             ingredient.category.slug,
         )
         if category_key not in selected_by_category:
-            raise ValueError("Selected ingredient category is not supported in Build Mode.")
+            raise ValueError(
+                "Selected ingredient category is not supported in Build Mode."
+            )
 
         selected_by_category[category_key].append(ingredient)
 
@@ -101,22 +105,71 @@ def build_pairing_suggestion_context(
 
 
 def get_pairing_suggestions(
-    *,
-    target_category,
-    current_selections,
-    ingredient_pool,
-    availability_state,
+    user_id,
+    target_category_id,
+    selected_ingredient_ids,
 ):
-    """Return pairing suggestions for a Build Mode category.
+    """Return fallback pairing suggestions for one Build Mode category."""
+    context = build_pairing_suggestion_context(
+        user_id,
+        target_category_id,
+        selected_ingredient_ids,
+    )
+    response = {
+        "target_category": _serialize_category(context["target_category"]),
+        "target_category_is_full": context["target_category_is_full"],
+        "has_useful_pairing_context": context["has_useful_pairing_context"],
+        "suggestion_source": "fallback",
+        "suggestions": [],
+    }
 
-    This function intentionally contains the service boundary and no business
-    logic yet. The eventual route should validate the request shape and call
-    this function with authenticated user data.
-    """
-    # TODO: Build the pairing context from authenticated user data.
-    # TODO: Call the selected AI provider only when useful context exists.
-    # TODO: Validate provider output and map it to existing active ingredients.
-    # TODO: Fall back to randomized valid suggestions when AI is unavailable.
-    # TODO: Return clean formatted suggestions with availability state.
-    _ = (target_category, current_selections, ingredient_pool, availability_state)
-    return []
+    if context["target_category_is_full"]:
+        return response
+
+    # TODO: When useful context exists, try the selected AI provider before
+    # falling back to these randomized candidates.
+    fallback_ingredients = _select_fallback_ingredients(context)
+    response["suggestions"] = [
+        _serialize_suggestion(ingredient, is_available)
+        for ingredient, is_available in fallback_ingredients
+    ]
+    return response
+
+
+def _select_fallback_ingredients(context, limit=3):
+    """Return up to ``limit`` randomized candidates, preferring availability."""
+    available_candidates = context["available_candidates"]
+    unavailable_candidates = context["unavailable_candidates"]
+    available_count = min(limit, len(available_candidates))
+    selected_ingredients = [
+        (ingredient, True)
+        for ingredient in random.sample(available_candidates, available_count)
+    ]
+    remaining_count = limit - len(selected_ingredients)
+
+    if remaining_count:
+        unavailable_count = min(remaining_count, len(unavailable_candidates))
+        selected_ingredients.extend(
+            (ingredient, False)
+            for ingredient in random.sample(unavailable_candidates, unavailable_count)
+        )
+
+    return selected_ingredients
+
+
+def _serialize_category(category):
+    return {
+        "id": category.id,
+        "name": category.name,
+        "slug": category.slug,
+    }
+
+
+def _serialize_suggestion(ingredient, is_available):
+    return {
+        "id": ingredient.id,
+        "name": ingredient.name,
+        "category": _serialize_category(ingredient.category),
+        "is_available": is_available,
+        "visual_pattern": ingredient.visual_pattern,
+    }

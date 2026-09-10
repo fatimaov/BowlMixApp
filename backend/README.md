@@ -125,20 +125,8 @@ Referenced OpenAPI assets are served from `backend/docs/openapi/`.
 
 ## AI Features
 
-AI is used for playful bowl naming and optional Build Mode pairing suggestions. Bowl naming runs inside generation flows; pairing suggestions use the authenticated endpoint below.
-
-### Pairing Suggestions
-
-`POST /api/ai/pairing-suggestions` is JWT-protected and accepts:
-
-```json
-{
-  "target_category_id": 3,
-  "selected_ingredient_ids": [1, 5]
-}
-```
-
-It validates active, available user ingredients and Build Mode category maximums. When selections from another category provide useful context, it uses the configured AI provider; otherwise, or on invalid provider output/failure, it returns up to three randomized valid suggestions. Responses identify the source as `ai`, `mixed`, or `fallback`.
+- Playful bowl naming runs inside bowl-generation flows.
+- Optional Build Mode pairing suggestions use the configured provider with validated randomized fallback results. Provider configuration supports Gemini's external API, LM Studio's local OpenAI-compatible server, or mock fallback behavior.
 
 ## Common Commands
 

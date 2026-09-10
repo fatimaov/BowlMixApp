@@ -70,6 +70,18 @@ def generate_bowl_name(prompt):
     }
 
 
+def generate_pairing_suggestions(prompt):
+    """Placeholder for Gemini-backed Build Mode pairing suggestions."""
+    # TODO: Reuse the provider request configuration above once the pairing
+    # prompt and response contract are implemented.
+    return {
+        "success": False,
+        "text": None,
+        "provider": "gemini",
+        "error": "Pairing suggestions are not implemented yet.",
+    }
+
+
 def _extract_text(response_data):
     steps = response_data.get("steps") if isinstance(response_data, dict) else None
     if isinstance(steps, list):

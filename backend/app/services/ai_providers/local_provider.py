@@ -64,6 +64,18 @@ def generate_bowl_name(prompt):
     }
 
 
+def generate_pairing_suggestions(prompt):
+    """Placeholder for LM Studio-backed Build Mode pairing suggestions."""
+    # TODO: Reuse the provider request configuration above once the pairing
+    # prompt and response contract are implemented.
+    return {
+        "success": False,
+        "text": None,
+        "provider": "local",
+        "error": "Pairing suggestions are not implemented yet.",
+    }
+
+
 def _extract_text(response_data):
     """Extract output text from an OpenAI-compatible Responses payload."""
     if not isinstance(response_data, dict):

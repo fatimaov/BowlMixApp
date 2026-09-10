@@ -9,10 +9,31 @@ GEMINI_INTERACTIONS_URL = (
     "https://generativelanguage.googleapis.com/v1beta/interactions"
 )
 API_REVISION = "2026-05-20"
+PAIRING_SUGGESTIONS_RESPONSE_FORMAT = {
+    "type": "text",
+    "mime_type": "application/json",
+    "schema": {
+        "type": "array",
+        "items": {"type": "integer"},
+    },
+}
 
 
 def generate_bowl_name(prompt):
     """Send a bowl-name prompt to Gemini and return a normalized result."""
+    return _generate_text(prompt)
+
+
+def generate_pairing_suggestions(prompt):
+    """Send a pairing-suggestions prompt to Gemini and normalize the result."""
+    return _generate_text(
+        prompt,
+        response_format=PAIRING_SUGGESTIONS_RESPONSE_FORMAT,
+    )
+
+
+def _generate_text(prompt, response_format=None):
+    """Send a text prompt to Gemini using BowlMix's shared provider settings."""
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
     model = os.getenv("GEMINI_MODEL", "").strip()
     timeout_value = os.getenv("AI_TIMEOUT_SECONDS", "").strip()
@@ -35,6 +56,10 @@ def generate_bowl_name(prompt):
     if not isinstance(prompt, str) or not prompt.strip():
         return _failure("Gemini input must be a non-empty string.")
 
+    request_data = {"model": model, "input": prompt}
+    if response_format is not None:
+        request_data["response_format"] = response_format
+
     try:
         response = requests.post(
             GEMINI_INTERACTIONS_URL,
@@ -43,7 +68,7 @@ def generate_bowl_name(prompt):
                 "Content-Type": "application/json",
                 "Api-Revision": API_REVISION,
             },
-            json={"model": model, "input": prompt},
+            json=request_data,
             timeout=timeout,
         )
     except requests.Timeout:
@@ -67,18 +92,6 @@ def generate_bowl_name(prompt):
         "success": True,
         "text": text,
         "provider": "gemini",
-    }
-
-
-def generate_pairing_suggestions(prompt):
-    """Placeholder for Gemini-backed Build Mode pairing suggestions."""
-    # TODO: Reuse the provider request configuration above once the pairing
-    # prompt and response contract are implemented.
-    return {
-        "success": False,
-        "text": None,
-        "provider": "gemini",
-        "error": "Pairing suggestions are not implemented yet.",
     }
 
 

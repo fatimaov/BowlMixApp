@@ -7,6 +7,16 @@ import requests
 
 def generate_bowl_name(prompt):
     """Send a bowl-name prompt to LM Studio and return a normalized result."""
+    return _generate_text(prompt)
+
+
+def generate_pairing_suggestions(prompt):
+    """Send a pairing-suggestions prompt to LM Studio and normalize the result."""
+    return _generate_text(prompt)
+
+
+def _generate_text(prompt):
+    """Send a text prompt using BowlMix's shared LM Studio settings."""
     base_url = os.getenv("LOCAL_AI_BASE_URL", "").strip()
     model = os.getenv("LOCAL_AI_MODEL", "").strip()
     timeout_value = os.getenv("AI_TIMEOUT_SECONDS", "").strip()
@@ -64,18 +74,6 @@ def generate_bowl_name(prompt):
     }
 
 
-def generate_pairing_suggestions(prompt):
-    """Placeholder for LM Studio-backed Build Mode pairing suggestions."""
-    # TODO: Reuse the provider request configuration above once the pairing
-    # prompt and response contract are implemented.
-    return {
-        "success": False,
-        "text": None,
-        "provider": "local",
-        "error": "Pairing suggestions are not implemented yet.",
-    }
-
-
 def _extract_text(response_data):
     """Extract output text from an OpenAI-compatible Responses payload."""
     if not isinstance(response_data, dict):
@@ -86,6 +84,11 @@ def _extract_text(response_data):
         return _normalize_text(output_text)
 
     output = response_data.get("output")
+    if isinstance(output, dict):
+        output_text = output.get("text")
+        if isinstance(output_text, str) and output_text.strip():
+            return _normalize_text(output_text)
+
     if not isinstance(output, list):
         return None
 

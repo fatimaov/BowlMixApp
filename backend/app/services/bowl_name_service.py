@@ -53,6 +53,7 @@ SUSPICIOUS_NAME_PHRASES = (
 
 
 def generate_bowl_name(bowl):
+    """Return the first valid AI name for one bowl, or a fallback name."""
     ai_names = _try_generate_ai_bowl_names(bowl)
     if ai_names:
         return ai_names[0]
@@ -62,9 +63,9 @@ def generate_bowl_name(bowl):
 
 
 def generate_unique_bowl_names(bowls):
-    """Generate names for a batch of bowls with one AI request."""
+    """Generate unique names for a batch of bowls with one AI request."""
     bowls = bowls or []
-    ai_names = _try_generate_ai_name_candidates(bowls)
+    ai_names = _generate_valid_ai_name_candidates(bowls)
     used_names = set()
     names = []
 
@@ -87,24 +88,14 @@ def generate_unique_bowl_names(bowls):
     return names
 
 
-def generate_rule_based_bowl_name(bowl):
-    adjective = random.choice(NAME_ADJECTIVES)
-    noun = random.choice(NAME_NOUNS)
-    return f"{adjective} {noun}".strip()
-
-
-def build_possible_names():
-    return [
-        f"{adjective} {noun}" for adjective in NAME_ADJECTIVES for noun in NAME_NOUNS
-    ]
-
-
 def _try_generate_ai_bowl_names(bowl):
-    candidates = _try_generate_ai_name_candidates(bowl)
+    """Return unique, non-empty AI name candidates for one bowl."""
+    candidates = _generate_valid_ai_name_candidates(bowl)
     return list(dict.fromkeys(candidate for candidate in candidates if candidate))
 
 
-def _try_generate_ai_name_candidates(bowl):
+def _generate_valid_ai_name_candidates(bowl):
+    """Request, parse, and validate AI-generated bowl name candidates."""
     try:
         prompt = _build_bowl_name_prompt(bowl)
         result = generate_ai_bowl_name(prompt)
@@ -148,6 +139,7 @@ def _try_generate_ai_name_candidates(bowl):
 
 
 def _generate_unique_fallback_name(bowl, used_names):
+    """Return an unused rule-based name for a bowl."""
     possible_names = build_possible_names()
     available_names = [name for name in possible_names if name not in used_names]
 
@@ -165,14 +157,8 @@ def _generate_unique_fallback_name(bowl, used_names):
     return f"{fallback_name} {suffix}"
 
 
-def _contains_suspicious_name_phrase(candidate):
-    normalized_candidate = candidate.lower()
-    return any(
-        phrase in normalized_candidate for phrase in SUSPICIOUS_NAME_PHRASES
-    )
-
-
 def _build_bowl_name_prompt(bowls):
+    """Build the AI prompt from one bowl or a batch of bowls."""
     if isinstance(bowls, list):
         ingredients = [
             bowl.get("ingredients", {})
@@ -202,3 +188,25 @@ def _build_bowl_name_prompt(bowls):
         f"{json.dumps(ingredients, ensure_ascii=False)}\n"
         "</ingredient_data>"
     )
+
+
+def _contains_suspicious_name_phrase(candidate):
+    """Check whether a candidate contains blocked prompt-injection phrases."""
+    normalized_candidate = candidate.lower()
+    return any(
+        phrase in normalized_candidate for phrase in SUSPICIOUS_NAME_PHRASES
+    )
+
+
+def generate_rule_based_bowl_name(bowl):
+    """Create a name by combining a random adjective and noun."""
+    adjective = random.choice(NAME_ADJECTIVES)
+    noun = random.choice(NAME_NOUNS)
+    return f"{adjective} {noun}".strip()
+
+
+def build_possible_names():
+    """Build every adjective-noun fallback name combination."""
+    return [
+        f"{adjective} {noun}" for adjective in NAME_ADJECTIVES for noun in NAME_NOUNS
+    ]

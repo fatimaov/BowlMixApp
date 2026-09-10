@@ -123,7 +123,11 @@ Swagger UI `Try it out` is enabled when `ENABLE_SWAGGER_TRY_OUT=true`. If the va
 
 Referenced OpenAPI assets are served from `backend/docs/openapi/`.
 
-## AI Pairing Suggestions
+## AI Features
+
+AI is used for playful bowl naming and optional Build Mode pairing suggestions. Bowl naming runs inside generation flows; pairing suggestions use the authenticated endpoint below.
+
+### Pairing Suggestions
 
 `POST /api/ai/pairing-suggestions` is JWT-protected and accepts:
 

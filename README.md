@@ -17,6 +17,7 @@ It also includes user accounts, ingredient availability management, saved bowls,
 - Personalized ingredients
 - Ingredient availability tracking
 - Manual bowl building
+- Build Mode AI pairing suggestions with safe fallback results
 - Automatic bowl generation
 - Saved bowls
 - Public demo access
@@ -26,6 +27,7 @@ It also includes user accounts, ingredient availability management, saved bowls,
 - Frontend: React, Vite, JavaScript, Bootstrap
 - Backend: Python, Flask, Flask-JWT-Extended, Flask-SQLAlchemy
 - Database: PostgreSQL
+- AI: Gemini or local LM Studio through a backend-only provider layer
 
 ## Architecture Summary
 
@@ -39,7 +41,7 @@ The frontend communicates with the backend through REST APIs, and the backend ow
 
 ## Current Project Status
 
-BowlMix is currently in planning and early implementation. The repository documents the intended MVP scope and architecture while development continues.
+BowlMix is under active development. Core backend flows, including the authenticated Build Mode pairing-suggestions API, are implemented. Frontend integration and cross-endpoint rate limiting remain in progress.
 
 ## License
 

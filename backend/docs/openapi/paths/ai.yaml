@@ -1,0 +1,27 @@
+pairing_suggestions:
+  post:
+    tags: [AI]
+    summary: Get Build Mode pairing suggestions for one ingredient category
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../schemas/ai.yaml#/PairingSuggestionsRequest
+    responses:
+      "200":
+        description: Pairing suggestions returned successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/ai.yaml#/PairingSuggestionsResponse
+      "400":
+        description: Pairing-suggestion validation failed
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/common.yaml#/ErrorResponse
+      "401":
+        $ref: ../components/responses.yaml#/Unauthorized

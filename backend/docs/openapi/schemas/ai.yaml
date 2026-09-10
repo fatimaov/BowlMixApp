@@ -1,0 +1,65 @@
+PairingSuggestionsRequest:
+  type: object
+  required: [target_category_id, selected_ingredient_ids]
+  additionalProperties: false
+  properties:
+    target_category_id:
+      type: integer
+    selected_ingredient_ids:
+      type: array
+      uniqueItems: true
+      items:
+        type: integer
+
+PairingSuggestion:
+  type: object
+  required: [id, name, category, is_available, visual_pattern]
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    category:
+      $ref: ./category.yaml#/IngredientCategorySummary
+    is_available:
+      type: boolean
+    visual_pattern:
+      type: string
+
+PairingSuggestionsResult:
+  type: object
+  required:
+    - target_category
+    - target_category_is_full
+    - has_useful_pairing_context
+    - suggestion_source
+    - suggestions
+  properties:
+    target_category:
+      $ref: ./category.yaml#/IngredientCategorySummary
+    target_category_is_full:
+      type: boolean
+    has_useful_pairing_context:
+      type: boolean
+    suggestion_source:
+      type: string
+      enum: [ai, mixed, fallback]
+    suggestions:
+      type: array
+      maxItems: 3
+      items:
+        $ref: '#/PairingSuggestion'
+
+PairingSuggestionsResponse:
+  type: object
+  required: [success, data]
+  properties:
+    success:
+      type: boolean
+      enum: [true]
+    data:
+      type: object
+      required: [pairing_suggestions]
+      properties:
+        pairing_suggestions:
+          $ref: '#/PairingSuggestionsResult'

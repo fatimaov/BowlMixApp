@@ -20,6 +20,9 @@ from app.services.ingredient_service import (
     normalize_selected_ingredient_ids,
 )
 
+SUGGESTION_LIMIT = 3
+MAX_PROVIDER_SUGGESTIONS = 6
+
 
 def build_pairing_suggestion_context(
     user_id,
@@ -128,15 +131,21 @@ def get_pairing_suggestions(
     if context["target_category_is_full"]:
         return response
 
+    ai_ingredients = []
     if context["has_useful_pairing_context"]:
-        _try_generate_ai_pairing_suggestions(context)
-        # TODO: Validate successful provider output against the candidate pool
-        # and use it before falling back.
+        provider_result = _try_generate_ai_pairing_suggestions(context)
+        ai_ingredients = _get_valid_ai_ingredients(context, provider_result)
 
-    fallback_ingredients = _select_fallback_ingredients(context)
+    selected_ingredients, used_ai, used_fallback = _select_suggestions(
+        context,
+        ai_ingredients,
+    )
+    if used_ai:
+        response["suggestion_source"] = "mixed" if used_fallback else "ai"
+
     response["suggestions"] = [
         _serialize_suggestion(ingredient, is_available)
-        for ingredient, is_available in fallback_ingredients
+        for ingredient, is_available in selected_ingredients
     ]
     return response
 
@@ -148,6 +157,53 @@ def _try_generate_ai_pairing_suggestions(context):
         return generate_ai_pairing_suggestions(prompt)
     except Exception:
         return None
+
+
+def _get_valid_ai_ingredients(context, provider_result):
+    """Keep unique provider IDs that match the current validated candidate pool."""
+    if not isinstance(provider_result, dict) or not provider_result.get("success"):
+        return []
+
+    text = provider_result.get("text")
+    if not isinstance(text, str):
+        return []
+
+    try:
+        ingredient_ids = json.loads(text)
+    except json.JSONDecodeError:
+        return []
+
+    if (
+        not isinstance(ingredient_ids, list)
+        or len(ingredient_ids) > MAX_PROVIDER_SUGGESTIONS
+    ):
+        return []
+
+    candidate_availability_by_id = {
+        ingredient.id: (ingredient, True)
+        for ingredient in context["available_candidates"]
+    }
+    candidate_availability_by_id.update(
+        {
+            ingredient.id: (ingredient, False)
+            for ingredient in context["unavailable_candidates"]
+        }
+    )
+
+    valid_ingredients = []
+    used_ids = set()
+    for ingredient_id in ingredient_ids:
+        if type(ingredient_id) is not int or ingredient_id in used_ids:
+            continue
+
+        candidate = candidate_availability_by_id.get(ingredient_id)
+        if candidate is None:
+            continue
+
+        valid_ingredients.append(candidate)
+        used_ids.add(ingredient_id)
+
+    return valid_ingredients
 
 
 def _build_pairing_suggestion_prompt(context):
@@ -188,18 +244,92 @@ def _build_pairing_suggestion_prompt(context):
     )
 
 
-def _select_fallback_ingredients(context, limit=3):
+def _select_suggestions(context, ai_ingredients):
+    """Combine valid AI suggestions with availability-prioritized fallback."""
+    selected_ingredients = []
+    used_ids = set()
+    used_fallback = False
+
+    ai_available = [
+        candidate for candidate in ai_ingredients if candidate[1]
+    ]
+    ai_unavailable = [
+        candidate for candidate in ai_ingredients if not candidate[1]
+    ]
+    _append_candidates(selected_ingredients, used_ids, ai_available)
+
+    available_fallback = _select_fallback_ingredients(
+        context,
+        limit=SUGGESTION_LIMIT - len(selected_ingredients),
+        excluded_ingredient_ids=used_ids,
+        include_unavailable=False,
+    )
+    if available_fallback:
+        selected_ingredients.extend(available_fallback)
+        used_ids.update(ingredient.id for ingredient, _ in available_fallback)
+        used_fallback = True
+
+    _append_candidates(selected_ingredients, used_ids, ai_unavailable)
+
+    unavailable_fallback = _select_fallback_ingredients(
+        context,
+        limit=SUGGESTION_LIMIT - len(selected_ingredients),
+        excluded_ingredient_ids=used_ids,
+        include_available=False,
+    )
+    if unavailable_fallback:
+        selected_ingredients.extend(unavailable_fallback)
+        used_fallback = True
+
+    selected_ingredients = selected_ingredients[:SUGGESTION_LIMIT]
+    ai_ids = {ingredient.id for ingredient, _ in ai_ingredients}
+    used_ai = any(
+        ingredient.id in ai_ids for ingredient, _ in selected_ingredients
+    )
+    return selected_ingredients, used_ai, used_fallback
+
+
+def _append_candidates(selected_ingredients, used_ids, candidates):
+    for ingredient, is_available in candidates:
+        if len(selected_ingredients) >= SUGGESTION_LIMIT:
+            return
+
+        if ingredient.id in used_ids:
+            continue
+
+        selected_ingredients.append((ingredient, is_available))
+        used_ids.add(ingredient.id)
+
+
+def _select_fallback_ingredients(
+    context,
+    limit=SUGGESTION_LIMIT,
+    excluded_ingredient_ids=None,
+    include_available=True,
+    include_unavailable=True,
+):
     """Return up to ``limit`` randomized candidates, preferring availability."""
-    available_candidates = context["available_candidates"]
-    unavailable_candidates = context["unavailable_candidates"]
-    available_count = min(limit, len(available_candidates))
+    excluded_ingredient_ids = excluded_ingredient_ids or set()
+    available_candidates = [
+        ingredient
+        for ingredient in context["available_candidates"]
+        if ingredient.id not in excluded_ingredient_ids
+    ]
+    unavailable_candidates = [
+        ingredient
+        for ingredient in context["unavailable_candidates"]
+        if ingredient.id not in excluded_ingredient_ids
+    ]
+    available_count = (
+        min(limit, len(available_candidates)) if include_available else 0
+    )
     selected_ingredients = [
         (ingredient, True)
         for ingredient in random.sample(available_candidates, available_count)
     ]
     remaining_count = limit - len(selected_ingredients)
 
-    if remaining_count:
+    if remaining_count and include_unavailable:
         unavailable_count = min(remaining_count, len(unavailable_candidates))
         selected_ingredients.extend(
             (ingredient, False)

@@ -11,6 +11,7 @@ from app.services.ai_provider_router import generate_ai_pairing_suggestions
 from app.services.bowl_validation_service import (
     CATEGORY_RULES,
     CATEGORY_SLUG_OUTPUT_KEYS,
+    validate_category_selection_maximums,
 )
 from app.services.ingredient_service import (
     get_active_available_ingredients_for_user,
@@ -80,6 +81,8 @@ def build_pairing_suggestion_context(
             selected_target_ingredients.append(ingredient)
         else:
             selected_other_ingredients.append(ingredient)
+
+    validate_category_selection_maximums(selected_by_category)
 
     selected_target_ids = {
         ingredient.id for ingredient in selected_target_ingredients

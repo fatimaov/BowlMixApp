@@ -2,7 +2,7 @@
 
 API-only Flask backend for BowlMix. The backend owns authentication, persistence, ingredient personalization, deterministic bowl generation, and saved bowl snapshots. It does not serve the React frontend.
 
-Current route coverage includes health, public demo generation, auth, categories, authenticated ingredient management, authenticated bowl build/generate, and authenticated saved bowl list/create/update.
+Current route coverage includes health, public demo generation, auth, categories, authenticated ingredient management, authenticated bowl build/generate, authenticated AI pairing suggestions, and authenticated saved bowl list/create/update.
 
 ## Features
 
@@ -15,13 +15,14 @@ Current route coverage includes health, public demo generation, auth, categories
 - Ingredient management service for My Ingredients, selector options, custom ingredient create/update, and custom ingredient soft deletion.
 - Availability service for user-specific `UserIngredient.is_available` updates.
 - Saved bowl service and snapshot service for saving bowls with stable ingredient/category visual snapshots plus server-side save validation.
+- Backend-only AI provider routing for Gemini, LM Studio, and mock fallback behavior.
+- Build Mode pairing suggestions with active/available ingredient validation, AI response validation, and randomized fallback suggestions.
 - OpenAPI spec serving plus Swagger UI docs for local API exploration at `/openapi.yaml` and `/api/docs/`.
 
 Not implemented:
 
-- AI API routes.
 - Frontend integration.
-- Backend AI provider integration.
+- Cross-endpoint rate limiting.
 
 ## Requirements
 
@@ -39,6 +40,12 @@ Not implemented:
 - `JWT_SECRET_KEY`: JWT signing key
 - `DATABASE_URL`: PostgreSQL SQLAlchemy connection string
 - `CORS_ORIGINS`: comma-separated allowed frontend origins
+- `AI_PROVIDER`: `gemini`, `local`, or `mock`
+- `AI_TIMEOUT_SECONDS`: provider request timeout in seconds
+- `GEMINI_API_KEY`: Gemini server-side API key
+- `GEMINI_MODEL`: Gemini model identifier
+- `LOCAL_AI_BASE_URL`: LM Studio server base URL
+- `LOCAL_AI_MODEL`: LM Studio model identifier
 
 Secret key mapping:
 
@@ -67,6 +74,12 @@ FLASK_SECRET_KEY=your-flask-secret-key
 JWT_SECRET_KEY=change-me-too
 DATABASE_URL=postgresql://username:password@localhost:5432/bowlmix
 CORS_ORIGINS=http://localhost:5173
+AI_PROVIDER=mock
+AI_TIMEOUT_SECONDS=5
+GEMINI_API_KEY=
+GEMINI_MODEL=
+LOCAL_AI_BASE_URL=http://localhost:1234
+LOCAL_AI_MODEL=
 ```
 
 3. Create the local PostgreSQL database named in `DATABASE_URL`.
@@ -89,7 +102,7 @@ pipenv run command seed-phase-2
 pipenv run start
 ```
 
-The default local API URL is `http://127.0.0.1:5000`.
+The default local API URL is `http://localhost:5000`.
 
 For a production-style WSGI launch on Linux, use Gunicorn with the Flask app exposed by `run.py`:
 
@@ -103,12 +116,25 @@ pipenv run gunicorn run:app
 
 Once the backend is running locally:
 
-- OpenAPI spec: `http://127.0.0.1:5000/openapi.yaml`
-- Swagger UI: `http://127.0.0.1:5000/api/docs/`
+- OpenAPI spec: `http://localhost:5000/openapi.yaml`
+- Swagger UI: `http://localhost:5000/api/docs/`
 
 Swagger UI `Try it out` is enabled when `ENABLE_SWAGGER_TRY_OUT=true`. If the variable is unset, it defaults to enabled for `FLASK_ENV=development` and disabled otherwise.
 
 Referenced OpenAPI assets are served from `backend/docs/openapi/`.
+
+## AI Pairing Suggestions
+
+`POST /api/ai/pairing-suggestions` is JWT-protected and accepts:
+
+```json
+{
+  "target_category_id": 3,
+  "selected_ingredient_ids": [1, 5]
+}
+```
+
+It validates active, available user ingredients and Build Mode category maximums. When selections from another category provide useful context, it uses the configured AI provider; otherwise, or on invalid provider output/failure, it returns up to three randomized valid suggestions. Responses identify the source as `ai`, `mixed`, or `fallback`.
 
 ## Common Commands
 
@@ -129,7 +155,7 @@ pipenv run command seed-phase-2
 Health route:
 
 ```bash
-curl http://127.0.0.1:5000/api/health
+curl http://localhost:5000/api/health
 ```
 
 Expected:
@@ -141,12 +167,12 @@ Expected:
 OpenAPI docs:
 
 ```bash
-curl http://127.0.0.1:5000/openapi.yaml
+curl http://localhost:5000/openapi.yaml
 ```
 
 Swagger UI:
 
-Open `http://127.0.0.1:5000/api/docs/` in a browser.
+Open `http://localhost:5000/api/docs/` in a browser.
 
 Compile backend Python files:
 
@@ -183,6 +209,8 @@ generate_public_demo_bowls()
 - `generate_mode_service.py`: generates three deterministic bowl suggestions with locks and exclusions.
 - `bowl_validation_service.py`: shared category limits and generation validation.
 - `bowl_name_service.py`: rule-based bowl names and per-batch unique naming.
+- `pairing_suggestions_service.py`: Build Mode pairing context, AI response validation, and randomized fallback suggestions.
+- `ai_provider_router.py` and `ai_providers/`: provider selection plus Gemini and LM Studio HTTP integrations.
 - `public_demo_service.py`: simplified public Generate Mode flow.
 - `category_service.py`: shared category metadata and approved visual patterns for frontend rendering.
 - `saved_bowl_service.py`: saved bowl create/list/detail/rename/soft-delete lifecycle.

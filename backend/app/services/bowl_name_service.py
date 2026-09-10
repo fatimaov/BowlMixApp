@@ -61,16 +61,6 @@ def generate_bowl_name(bowl):
     return name or DEFAULT_BOWL_NAME
 
 
-def generate_unique_bowl_name(bowl, used_names):
-    used_names = set(used_names or [])
-
-    for ai_name in _try_generate_ai_bowl_names(bowl):
-        if ai_name not in used_names:
-            return ai_name
-
-    return _generate_unique_fallback_name(bowl, used_names)
-
-
 def generate_unique_bowl_names(bowls):
     """Generate names for a batch of bowls with one AI request."""
     bowls = bowls or []

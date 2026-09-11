@@ -2,7 +2,11 @@
 
 API-only Flask backend for BowlMix. The backend owns authentication, persistence, ingredient personalization, deterministic bowl generation, and saved bowl snapshots. It does not serve the React frontend.
 
-Current route coverage includes health, public demo generation, auth, categories, authenticated ingredient management, authenticated bowl build/generate, and authenticated saved bowl list/create/update.
+The backend app is available at [https://bowlmix-app.onrender.com/](https://bowlmix-app.onrender.com/).
+
+The backend runs on Render's free tier, so its first request may take 30–60 seconds.
+
+Current route coverage includes public demo generation, auth, categories, authenticated ingredient management, authenticated bowl build/generate, authenticated AI pairing suggestions, and authenticated saved bowl list/create/update.
 
 ## Features
 
@@ -15,13 +19,11 @@ Current route coverage includes health, public demo generation, auth, categories
 - Ingredient management service for My Ingredients, selector options, custom ingredient create/update, and custom ingredient soft deletion.
 - Availability service for user-specific `UserIngredient.is_available` updates.
 - Saved bowl service and snapshot service for saving bowls with stable ingredient/category visual snapshots plus server-side save validation.
+- Backend-only AI provider routing for Gemini, LM Studio, and mock fallback behavior.
+- Build Mode pairing suggestions with active/available ingredient validation, AI response validation, and randomized fallback suggestions.
 - OpenAPI spec serving plus Swagger UI docs for local API exploration at `/openapi.yaml` and `/api/docs/`.
+- Cross-endpoint rate limiting with a 200/hour global default and stricter limits for auth, AI, generation, and write routes.
 
-Not implemented:
-
-- AI API routes.
-- Frontend integration.
-- Backend AI provider integration.
 
 ## Requirements
 
@@ -39,6 +41,14 @@ Not implemented:
 - `JWT_SECRET_KEY`: JWT signing key
 - `DATABASE_URL`: PostgreSQL SQLAlchemy connection string
 - `CORS_ORIGINS`: comma-separated allowed frontend origins
+- `RATELIMIT_STORAGE_URI`: rate-limit storage backend, using `memory://` for the MVP
+- `RATELIMIT_APPLICATION`: global rate limit, defaulting to `200 per hour`
+- `AI_PROVIDER`: `gemini`, `local`, or `mock`
+- `AI_TIMEOUT_SECONDS`: provider request timeout in seconds
+- `GEMINI_API_KEY`: Gemini server-side API key
+- `GEMINI_MODEL`: Gemini model identifier
+- `LOCAL_AI_BASE_URL`: LM Studio server base URL
+- `LOCAL_AI_MODEL`: LM Studio model identifier
 
 Secret key mapping:
 
@@ -67,6 +77,14 @@ FLASK_SECRET_KEY=your-flask-secret-key
 JWT_SECRET_KEY=change-me-too
 DATABASE_URL=postgresql://username:password@localhost:5432/bowlmix
 CORS_ORIGINS=http://localhost:5173
+RATELIMIT_STORAGE_URI=memory://
+RATELIMIT_APPLICATION=200 per hour
+AI_PROVIDER=mock
+AI_TIMEOUT_SECONDS=5
+GEMINI_API_KEY=
+GEMINI_MODEL=
+LOCAL_AI_BASE_URL=http://localhost:1234
+LOCAL_AI_MODEL=
 ```
 
 3. Create the local PostgreSQL database named in `DATABASE_URL`.
@@ -89,7 +107,7 @@ pipenv run command seed-phase-2
 pipenv run start
 ```
 
-The default local API URL is `http://127.0.0.1:5000`.
+The default local API URL is `http://localhost:5000`.
 
 For a production-style WSGI launch on Linux, use Gunicorn with the Flask app exposed by `run.py`:
 
@@ -103,12 +121,17 @@ pipenv run gunicorn run:app
 
 Once the backend is running locally:
 
-- OpenAPI spec: `http://127.0.0.1:5000/openapi.yaml`
-- Swagger UI: `http://127.0.0.1:5000/api/docs/`
+- OpenAPI spec: `http://localhost:5000/openapi.yaml`
+- Swagger UI: `http://localhost:5000/api/docs/`
 
 Swagger UI `Try it out` is enabled when `ENABLE_SWAGGER_TRY_OUT=true`. If the variable is unset, it defaults to enabled for `FLASK_ENV=development` and disabled otherwise.
 
 Referenced OpenAPI assets are served from `backend/docs/openapi/`.
+
+## AI Features
+
+- Playful bowl naming runs inside bowl-generation flows.
+- Optional Build Mode pairing suggestions use the configured provider with validated randomized fallback results. Provider configuration supports Gemini's external API, LM Studio's local OpenAI-compatible server, or mock fallback behavior.
 
 ## Common Commands
 
@@ -126,27 +149,15 @@ pipenv run command seed-phase-2
 
 ## How To Check
 
-Health route:
-
-```bash
-curl http://127.0.0.1:5000/api/health
-```
-
-Expected:
-
-```json
-{ "service": "bowlmix-api", "status": "ok" }
-```
-
 OpenAPI docs:
 
 ```bash
-curl http://127.0.0.1:5000/openapi.yaml
+curl http://localhost:5000/openapi.yaml
 ```
 
 Swagger UI:
 
-Open `http://127.0.0.1:5000/api/docs/` in a browser.
+Open `http://localhost:5000/api/docs/` in a browser.
 
 Compile backend Python files:
 
@@ -170,6 +181,7 @@ generate_public_demo_bowls()
 
 - Postman happy-flow verification passed successfully on August 3, 2026.
 - Postman edge-case verification passed successfully for the documented scenarios on August 3, 2026.
+- Rate-limit verification confirmed global and endpoint-specific `429` responses for anonymous and authenticated requests.
 - Consolidated Postman summary:
   - [backend/docs/testing/postman-summary.md](./docs/testing/postman-summary.md)
 - Additional smoke tests and ad hoc manual checks were also performed during development and are called out in the consolidated summary, but are not exhaustively itemized there.
@@ -183,6 +195,8 @@ generate_public_demo_bowls()
 - `generate_mode_service.py`: generates three deterministic bowl suggestions with locks and exclusions.
 - `bowl_validation_service.py`: shared category limits and generation validation.
 - `bowl_name_service.py`: rule-based bowl names and per-batch unique naming.
+- `pairing_suggestions_service.py`: Build Mode pairing context, AI response validation, and randomized fallback suggestions.
+- `ai_provider_router.py` and `ai_providers/`: provider selection plus Gemini and LM Studio HTTP integrations.
 - `public_demo_service.py`: simplified public Generate Mode flow.
 - `category_service.py`: shared category metadata and approved visual patterns for frontend rendering.
 - `saved_bowl_service.py`: saved bowl create/list/detail/rename/soft-delete lifecycle.
@@ -193,6 +207,12 @@ generate_public_demo_bowls()
 - Saved bowl ingredients are snapshots. When a bowl is saved, the backend copies ingredient and category display metadata into `saved_bowl_ingredients` so saved bowls remain stable even if source data changes later.
 - Saved bowl create requests are validated server-side before snapshot creation. Submitted ingredient IDs must belong to valid available ingredients for the current user and must satisfy the shared category min/max rules.
 - Default ingredients are stored once in `ingredients` and are treated as available for every user unless a user-specific override exists. `user_ingredients` stores only per-user availability overrides and custom-ingredient availability.
+
+## Supabase Keep-Alive
+
+Supabase Free Tier projects may pause after inactivity. The GitHub Actions workflow keeps the production database active by inserting a timestamped row into the dedicated `keep_alive_logs` table. This runs directly against Supabase, so it does not wake the Render backend, create fake users, or pollute BowlMix product tables.
+
+`keep_alive_logs` is maintenance metadata created manually in Supabase with raw SQL. It is intentionally outside the Flask-SQLAlchemy models and Alembic migrations. The workflow connects with the GitHub repository secret `SUPABASE_DATABASE_URL`; never commit this secret or any database credentials. It runs on schedule and can also be started manually from GitHub Actions.
 
 ## Admin
 

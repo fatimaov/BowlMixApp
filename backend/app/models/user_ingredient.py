@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, ForeignKey, Integer, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.config.extensions import db
+from app.config import db
 
 
 class UserIngredient(db.Model):

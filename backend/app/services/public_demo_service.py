@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
-from app.config.extensions import db
+from app.config import db
 from app.models import Ingredient
 from app.services.generate_mode_service import generate_generate_mode_bowls
 

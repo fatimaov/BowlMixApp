@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
+from app.config import limiter
 from app.services.build_mode_service import build_bowl_for_user
 from app.services.generate_mode_service import generate_bowls_for_user
 from app.utils import get_json_object_payload
@@ -9,6 +10,7 @@ bowls_bp = Blueprint("bowls", __name__)
 
 
 @bowls_bp.post("/bowls/build")
+@limiter.limit("10 per minute")
 @jwt_required()
 def build_bowl_route():
     request_payload, error_response = get_json_object_payload()
@@ -47,6 +49,7 @@ def build_bowl_route():
 
 
 @bowls_bp.post("/bowls/generate")
+@limiter.limit("10 per minute")
 @jwt_required()
 def generate_bowls_route():
     request_payload, error_response = get_json_object_payload(required=False)

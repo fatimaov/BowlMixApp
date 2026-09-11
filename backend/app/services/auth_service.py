@@ -4,7 +4,7 @@ from email_validator import EmailNotValidError, validate_email
 from sqlalchemy import select
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app.config.extensions import db
+from app.config import db
 from app.models import User
 
 MIN_USERNAME_LENGTH = 3

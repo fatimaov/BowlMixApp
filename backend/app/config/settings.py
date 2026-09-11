@@ -46,3 +46,11 @@ class Config:
         for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
         if origin.strip()
     ]
+    RATELIMIT_STORAGE_URI = os.getenv(
+        "RATELIMIT_STORAGE_URI",
+        "memory://",
+    )
+    RATELIMIT_APPLICATION = os.getenv(
+        "RATELIMIT_APPLICATION",
+        "200 per hour",
+    )

@@ -1,6 +1,6 @@
 from sqlalchemy import and_, or_, select
 
-from app.config.extensions import db
+from app.config import db
 from app.models import Ingredient, UserIngredient
 
 

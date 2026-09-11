@@ -1,7 +1,7 @@
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
-from app.config.extensions import db
+from app.config import db
 from app.models import (
     Ingredient,
     IngredientCategory,

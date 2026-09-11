@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify
+from app.config import limiter
 from app.services.public_demo_service import generate_public_demo_bowls
 from app.utils import get_json_object_payload, json_error
 
@@ -6,6 +7,7 @@ public_demo_bp = Blueprint("demo", __name__)
 
 
 @public_demo_bp.post("/demo/bowls/generate")
+@limiter.limit("10 per minute")
 def generate_demo_bowls():
     request_payload, error_response = get_json_object_payload(required=False)
     if error_response is not None:

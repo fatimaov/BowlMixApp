@@ -53,6 +53,23 @@ def validate_bowl_composition(ingredients_by_category):
             )
 
 
+def validate_category_selection_maximums(ingredients_by_category):
+    """Reject partial Build Mode selections that exceed category maximums."""
+    for category_key in ingredients_by_category:
+        if category_key not in CATEGORY_RULES:
+            raise ValueError(f"Unsupported ingredient category: {category_key}.")
+
+    for category_key, rules in CATEGORY_RULES.items():
+        ingredient_count = len(ingredients_by_category.get(category_key, []))
+        max_count = rules["max"]
+
+        if ingredient_count > max_count:
+            raise ValueError(
+                f"Too many ingredients for {category_key}: "
+                f"{ingredient_count} selected, maximum is {max_count}."
+            )
+
+
 def validate_locked_ingredient_limits(locked_ingredients_by_category):
     for category_key, locked_ingredients in locked_ingredients_by_category.items():
         if category_key not in CATEGORY_RULES:

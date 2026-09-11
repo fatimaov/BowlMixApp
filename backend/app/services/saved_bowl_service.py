@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import joinedload
 
-from app.config.extensions import db
+from app.config import db
 from app.models import Ingredient, SavedBowl, SavedBowlIngredient, UserIngredient
 from app.services.build_mode_service import group_selected_ingredients_by_category
 from app.services.bowl_validation_service import validate_bowl_composition

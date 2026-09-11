@@ -1,6 +1,6 @@
 from sqlalchemy import select
 
-from app.config.extensions import db
+from app.config import db
 from app.models import Ingredient, IngredientCategory
 from app.seed_data.categories import CATEGORIES
 from app.seed_data.ingredients import DEFAULT_INGREDIENTS

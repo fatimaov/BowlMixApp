@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
+from app.config import limiter
 from app.services.saved_bowl_service import (
     create_saved_bowl,
     get_saved_bowls,
@@ -47,6 +48,7 @@ def get_saved_bowls_route():
 
 
 @saved_bowls_bp.post("/saved-bowls")
+@limiter.limit("10 per minute")
 @jwt_required()
 def create_saved_bowl_route():
     request_payload, error_response = get_json_object_payload()
@@ -85,6 +87,7 @@ def create_saved_bowl_route():
 
 
 @saved_bowls_bp.patch("/saved-bowls/<int:saved_bowl_id>")
+@limiter.limit("10 per minute")
 @jwt_required()
 def update_saved_bowl_route(saved_bowl_id):
     request_payload, error_response = get_json_object_payload()

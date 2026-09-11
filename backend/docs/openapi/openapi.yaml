@@ -5,8 +5,7 @@ info:
   description: |
     Manual OpenAPI specification for the currently implemented BowlMix backend.
     This spec documents the public demo, auth, categories, ingredients, bowl generation,
-    and saved bowl endpoints. AI endpoints are intentionally excluded because they are
-    not implemented yet.
+    saved bowl endpoints, and Build Mode AI pairing suggestions.
 servers:
   - url: /api
     description: BowlMix API base path
@@ -15,19 +14,17 @@ tags:
     description: User registration, login, and profile management
   - name: Demo
     description: Public demo bowl generation
-  - name: Health
-    description: Service health checks
   - name: Categories
     description: Ingredient categories and visual metadata
   - name: Ingredients
     description: Ingredient management and availability updates
   - name: Bowls
     description: Build mode and generate mode endpoints
+  - name: AI
+    description: AI-assisted Build Mode pairing suggestions
   - name: Saved Bowls
     description: Saved bowl persistence and soft deletion
 paths:
-  /health:
-    $ref: ./openapi/paths/health.yaml#/health_check
   /auth/register:
     $ref: ./openapi/paths/auth.yaml#/auth_register
   /auth/login:
@@ -48,6 +45,8 @@ paths:
     $ref: ./openapi/paths/bowls.yaml#/bowls_build
   /bowls/generate:
     $ref: ./openapi/paths/bowls.yaml#/bowls_generate
+  /ai/pairing-suggestions:
+    $ref: ./openapi/paths/ai.yaml#/pairing_suggestions
   /saved-bowls:
     $ref: ./openapi/paths/saved-bowls.yaml#/saved_bowls_collection
   /saved-bowls/{saved_bowl_id}:
@@ -85,8 +84,6 @@ components:
       $ref: ./openapi/schemas/common.yaml#/MessageResponse
     SuccessEnvelope:
       $ref: ./openapi/schemas/common.yaml#/SuccessEnvelope
-    HealthResponse:
-      $ref: ./openapi/schemas/common.yaml#/HealthResponse
     User:
       $ref: ./openapi/schemas/auth.yaml#/User
     RegisterRequest:
@@ -149,6 +146,10 @@ components:
       $ref: ./openapi/schemas/bowl.yaml#/GenerateBowlsRequest
     DemoGenerateBowlsRequest:
       $ref: ./openapi/schemas/bowl.yaml#/DemoGenerateBowlsRequest
+    PairingSuggestionsRequest:
+      $ref: ./openapi/schemas/ai.yaml#/PairingSuggestionsRequest
+    PairingSuggestionsResponse:
+      $ref: ./openapi/schemas/ai.yaml#/PairingSuggestionsResponse
     SavedBowlIngredientSnapshot:
       $ref: ./openapi/schemas/saved-bowl.yaml#/SavedBowlIngredientSnapshot
     SavedBowl:

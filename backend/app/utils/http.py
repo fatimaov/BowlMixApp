@@ -16,6 +16,14 @@ def json_error(code, message, status_code):
     )
 
 
+def rate_limit_error_handler(_error):
+    return json_error(
+        "RATE_LIMIT_EXCEEDED",
+        "Too many requests. Please try again later.",
+        429,
+    )
+
+
 def get_json_object_payload(required=True):
     request_payload = request.get_json(silent=True)
 

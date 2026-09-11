@@ -1,6 +1,6 @@
 from sqlalchemy import select
 
-from app.config.extensions import db
+from app.config import db
 from app.models import IngredientCategory
 from app.models.ingredient import APPROVED_VISUAL_PATTERNS
 

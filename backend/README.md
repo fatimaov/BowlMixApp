@@ -189,6 +189,7 @@ generate_public_demo_bowls()
 
 - Postman happy-flow verification passed successfully on August 3, 2026.
 - Postman edge-case verification passed successfully for the documented scenarios on August 3, 2026.
+- Rate-limit verification confirmed global and endpoint-specific `429` responses for anonymous and authenticated requests.
 - Consolidated Postman summary:
   - [backend/docs/testing/postman-summary.md](./docs/testing/postman-summary.md)
 - Additional smoke tests and ad hoc manual checks were also performed during development and are called out in the consolidated summary, but are not exhaustively itemized there.

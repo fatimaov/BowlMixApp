@@ -17,6 +17,7 @@ email-validator = "*"
 flask-swagger-ui = "*"
 gunicorn = "*"
 requests = "*"
+flask-limiter = "*"
 
 [scripts]
 start = "python run.py"

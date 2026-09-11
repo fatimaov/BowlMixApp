@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from app.config import limiter
 
 from app.services.auth_service import (
     change_user_password,
@@ -16,6 +17,7 @@ auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.post("/auth/register")
+@limiter.limit("5 per minute")
 def register_user_route():
     request_payload, error_response = get_json_object_payload()
     if error_response is not None:
@@ -51,6 +53,7 @@ def register_user_route():
 
 
 @auth_bp.post("/auth/login")
+@limiter.limit("5 per minute")
 def login_user_route():
     request_payload, error_response = get_json_object_payload()
     if error_response is not None:
@@ -129,6 +132,7 @@ def get_current_user_route():
 
 
 @auth_bp.patch("/auth/me")
+@limiter.limit("10 per minute")
 @jwt_required()
 def update_current_user_route():
     request_payload, error_response = get_json_object_payload()

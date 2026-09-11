@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
+from app.config import limiter
 from app.services.availability_service import set_ingredient_availability
 from app.services.ingredient_service import (
     create_ingredient_for_user,
@@ -57,6 +58,7 @@ def get_ingredients_route():
 
 
 @ingredients_bp.post("/ingredients")
+@limiter.limit("10 per minute")
 @jwt_required()
 def create_ingredient_route():
     request_payload, error_response = get_json_object_payload()
@@ -95,6 +97,7 @@ def create_ingredient_route():
 
 
 @ingredients_bp.patch("/ingredients/<int:ingredient_id>")
+@limiter.limit("10 per minute")
 @jwt_required()
 def update_ingredient_route(ingredient_id):
     request_payload, error_response = get_json_object_payload()
@@ -135,6 +138,7 @@ def update_ingredient_route(ingredient_id):
 
 
 @ingredients_bp.patch("/ingredients/<int:ingredient_id>/availability")
+@limiter.limit("30 per minute")
 @jwt_required()
 def update_ingredient_availability_route(ingredient_id):
     request_payload, error_response = get_json_object_payload()

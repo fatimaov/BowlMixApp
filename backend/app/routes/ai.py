@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
+from app.config import limiter
 from app.services.pairing_suggestions_service import get_pairing_suggestions
 from app.utils import get_json_object_payload, json_error
 
@@ -8,6 +9,7 @@ ai_bp = Blueprint("ai", __name__)
 
 
 @ai_bp.post("/ai/pairing-suggestions")
+@limiter.limit("5 per minute")
 @jwt_required()
 def get_pairing_suggestions_route():
     request_payload, error_response = get_json_object_payload()

@@ -2,6 +2,10 @@
 
 API-only Flask backend for BowlMix. The backend owns authentication, persistence, ingredient personalization, deterministic bowl generation, and saved bowl snapshots. It does not serve the React frontend.
 
+The backend app is available at [https://bowlmix-app.onrender.com/](https://bowlmix-app.onrender.com/).
+
+The backend runs on Render's free tier, so its first request may take 30–60 seconds.
+
 Current route coverage includes health, public demo generation, auth, categories, authenticated ingredient management, authenticated bowl build/generate, authenticated AI pairing suggestions, and authenticated saved bowl list/create/update.
 
 ## Features

@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.config.extensions import db
+from app.config import db
 
 
 class SavedBowlIngredient(db.Model):

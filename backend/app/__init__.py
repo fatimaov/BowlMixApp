@@ -3,8 +3,7 @@ from flask import Flask
 
 from app.admin import setup_admin
 from app.commands import register_commands
-from app.config.extensions import init_extensions
-from app.config.settings import Config
+from app.config import Config, init_extensions
 from app.routes import register_blueprints
 
 # Import models so Flask-Migrate and SQLAlchemy know every mapped table.

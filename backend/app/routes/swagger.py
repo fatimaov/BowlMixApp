@@ -3,7 +3,7 @@ from pathlib import Path
 from flask import Blueprint, redirect, send_from_directory
 from flask_swagger_ui import get_swaggerui_blueprint
 
-from app.config.settings import Config
+from app.config import Config
 
 DOCS_DIR = Path(__file__).resolve().parents[2] / "docs"
 OPENAPI_DIR = DOCS_DIR / "openapi"

@@ -3,7 +3,7 @@ import random
 from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import joinedload
 
-from app.config.extensions import db
+from app.config import db
 from app.models import Ingredient, IngredientCategory, UserIngredient
 from app.models.ingredient import APPROVED_VISUAL_PATTERNS
 from app.services.availability_service import set_ingredient_availability

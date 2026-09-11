@@ -17,11 +17,22 @@ PAIRING_SUGGESTIONS_RESPONSE_FORMAT = {
         "items": {"type": "integer"},
     },
 }
+BOWL_NAME_RESPONSE_FORMAT = {
+    "type": "text",
+    "mime_type": "application/json",
+    "schema": {
+        "type": "array",
+        "items": {"type": "string"},
+    },
+}
 
 
 def generate_bowl_name(prompt):
     """Send a bowl-name prompt to Gemini and return a normalized result."""
-    return _generate_text(prompt)
+    return _generate_text(
+        prompt, 
+        response_format=BOWL_NAME_RESPONSE_FORMAT,
+    )
 
 
 def generate_pairing_suggestions(prompt):

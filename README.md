@@ -41,7 +41,7 @@ The frontend communicates with the backend through REST APIs, and the backend ow
 
 ## Current Project Status
 
-BowlMix is under active development. Core backend flows, including the authenticated Build Mode pairing-suggestions API, are implemented. Frontend integration and cross-endpoint rate limiting remain in progress.
+BowlMix is under active development. The core backend is complete, and the remaining work is frontend integration.
 
 ## License
 

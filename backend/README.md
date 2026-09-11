@@ -18,11 +18,8 @@ Current route coverage includes health, public demo generation, auth, categories
 - Backend-only AI provider routing for Gemini, LM Studio, and mock fallback behavior.
 - Build Mode pairing suggestions with active/available ingredient validation, AI response validation, and randomized fallback suggestions.
 - OpenAPI spec serving plus Swagger UI docs for local API exploration at `/openapi.yaml` and `/api/docs/`.
+- Cross-endpoint rate limiting with a 200/hour global default and stricter limits for auth, AI, generation, and write routes.
 
-Not implemented:
-
-- Frontend integration.
-- Cross-endpoint rate limiting.
 
 ## Requirements
 
@@ -40,6 +37,8 @@ Not implemented:
 - `JWT_SECRET_KEY`: JWT signing key
 - `DATABASE_URL`: PostgreSQL SQLAlchemy connection string
 - `CORS_ORIGINS`: comma-separated allowed frontend origins
+- `RATELIMIT_STORAGE_URI`: rate-limit storage backend, using `memory://` for the MVP
+- `RATELIMIT_APPLICATION`: global rate limit, defaulting to `200 per hour`
 - `AI_PROVIDER`: `gemini`, `local`, or `mock`
 - `AI_TIMEOUT_SECONDS`: provider request timeout in seconds
 - `GEMINI_API_KEY`: Gemini server-side API key
@@ -74,6 +73,8 @@ FLASK_SECRET_KEY=your-flask-secret-key
 JWT_SECRET_KEY=change-me-too
 DATABASE_URL=postgresql://username:password@localhost:5432/bowlmix
 CORS_ORIGINS=http://localhost:5173
+RATELIMIT_STORAGE_URI=memory://
+RATELIMIT_APPLICATION=200 per hour
 AI_PROVIDER=mock
 AI_TIMEOUT_SECONDS=5
 GEMINI_API_KEY=

@@ -14,8 +14,6 @@ tags:
     description: User registration, login, and profile management
   - name: Demo
     description: Public demo bowl generation
-  - name: Health
-    description: Service health checks
   - name: Categories
     description: Ingredient categories and visual metadata
   - name: Ingredients
@@ -27,8 +25,6 @@ tags:
   - name: Saved Bowls
     description: Saved bowl persistence and soft deletion
 paths:
-  /health:
-    $ref: ./openapi/paths/health.yaml#/health_check
   /auth/register:
     $ref: ./openapi/paths/auth.yaml#/auth_register
   /auth/login:
@@ -88,8 +84,6 @@ components:
       $ref: ./openapi/schemas/common.yaml#/MessageResponse
     SuccessEnvelope:
       $ref: ./openapi/schemas/common.yaml#/SuccessEnvelope
-    HealthResponse:
-      $ref: ./openapi/schemas/common.yaml#/HealthResponse
     User:
       $ref: ./openapi/schemas/auth.yaml#/User
     RegisterRequest:

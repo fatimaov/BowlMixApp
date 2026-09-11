@@ -6,7 +6,7 @@ The backend app is available at [https://bowlmix-app.onrender.com/](https://bowl
 
 The backend runs on Render's free tier, so its first request may take 30–60 seconds.
 
-Current route coverage includes health, public demo generation, auth, categories, authenticated ingredient management, authenticated bowl build/generate, authenticated AI pairing suggestions, and authenticated saved bowl list/create/update.
+Current route coverage includes public demo generation, auth, categories, authenticated ingredient management, authenticated bowl build/generate, authenticated AI pairing suggestions, and authenticated saved bowl list/create/update.
 
 ## Features
 
@@ -148,18 +148,6 @@ pipenv run command seed-phase-2
 ```
 
 ## How To Check
-
-Health route:
-
-```bash
-curl http://localhost:5000/api/health
-```
-
-Expected:
-
-```json
-{ "service": "bowlmix-api", "status": "ok" }
-```
 
 OpenAPI docs:
 

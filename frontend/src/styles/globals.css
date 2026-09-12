@@ -12,9 +12,19 @@ body,
 }
 
 body {
+  background: var(--color-app-bg);
+  color: var(--color-text);
   min-height: 100vh;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
 }

@@ -1,0 +1,7 @@
+:root {
+  /* Bootstrap's theme variables are derived from BowlMix tokens. */
+  --bs-primary: var(--color-primary);
+  --bs-primary-rgb: 242, 140, 126;
+  --bs-body-bg: var(--color-app-bg);
+  --bs-body-color: var(--color-text);
+}

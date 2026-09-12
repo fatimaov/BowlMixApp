@@ -25,7 +25,7 @@
 }
 
 .app__eyebrow {
-  color: var(--bs-primary);
+  color: var(--color-primary);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -38,7 +38,7 @@
 }
 
 .route-page__eyebrow {
-  color: var(--bs-primary);
+  color: var(--color-primary);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;

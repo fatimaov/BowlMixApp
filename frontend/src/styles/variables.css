@@ -1,0 +1,65 @@
+:root {
+  /* App base */
+  --color-app-bg: #E8D9D1;
+  --color-surface: #FFFFFF;
+  --color-text: #2B2B2B;
+  --color-text-muted: #8D8D8D;
+
+  /* Brand */
+  --color-primary: #F28C7E;
+  --color-primary-soft: #F8BEB8;
+
+  /* Neutral */
+  --color-neutral: #D9D9D9;
+  --color-neutral-strong: #A3A3A3;
+  --color-neutral-disabled: #C4C4C4;
+
+  /* Borders */
+  --color-border: #DDDDDD;
+
+  /* Info / warning */
+  --color-info-bg: #E9D7C1;
+  --color-info-border: #EEC655;
+
+  /* Overlay */
+  --color-overlay: rgba(0, 0, 0, 0.45);
+
+  /* Interaction states */
+  --color-primary-hover: #E97868;
+  --color-primary-active: #D96555;
+  --color-primary-focus: #F28C7E;
+
+  --color-neutral-hover: #CFCFCF;
+  --color-neutral-active: #BFBFBF;
+
+  --color-disabled-bg: #D9D9D9;
+  --color-disabled-text: #8D8D8D;
+
+  /* Availability */
+  --color-available: #F28C7E;
+  --color-available-disabled: #F8BEB8;
+  --color-unavailable: #A3A3A3;
+  --color-unavailable-disabled: #C4C4C4;
+
+  /* Category colors */
+  --color-category-bases: #AF8775;
+  --color-category-bases-soft: #D5C0B6;
+
+  --color-category-proteins: #ED8A77;
+  --color-category-proteins-soft: #E9B9B2;
+
+  --color-category-vegetables: #C4C065;
+  --color-category-vegetables-soft: #DEDBA8;
+
+  --color-category-toppings: #EEC655;
+  --color-category-toppings-soft: #F7E5B1;
+
+  --color-category-crunch: #D6BFDC;
+  --color-category-crunch-soft: #E3D4E7;
+
+  --color-category-sauces: #EDABAF;
+  --color-category-sauces-soft: #F5D1D3;
+
+  --color-category-extras: #98D2D4;
+  --color-category-extras-soft: #D6EDEE;
+}

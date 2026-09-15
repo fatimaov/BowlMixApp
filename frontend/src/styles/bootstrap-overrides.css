@@ -1,7 +1,48 @@
-:root {
-  /* Bootstrap's theme variables are derived from BowlMix tokens. */
-  --bs-primary: var(--color-primary);
-  --bs-primary-rgb: 242, 140, 126;
-  --bs-body-bg: var(--color-app-bg);
-  --bs-body-color: var(--color-text);
+/* bootstrap-overrides.css */
+
+/* Layout */
+.container,
+.container-fluid {
+  padding-inline: var(--space-page-x-mobile);
+}
+
+@media (min-width: 768px) {
+  .container,
+  .container-fluid {
+    padding-inline: var(--space-page-x-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container,
+  .container-fluid {
+    padding-inline: var(--space-page-x-desktop);
+  }
+}
+
+/* Forms */
+.form-control,
+.form-select {
+  font-family: var(--font-family-base);
+  font-size: var(--text-input);
+  color: var(--color-text);
+  border-color: var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+/* Modal */
+.modal-content {
+  border-radius: var(--radius-modal);
+  border: none;
+  box-shadow: var(--shadow-modal);
+}
+
+.modal-backdrop {
+  background-color: var(--color-overlay);
 }

@@ -148,4 +148,36 @@
   --radius-bowl-card: var(--radius-lg);
   --radius-modal: var(--radius-sm);
   --radius-ingredient-card: var(--radius-sm);
+
+  /* Shadows */
+  --shadow-sm: 0 2px 6px rgba(43, 43, 43, 0.08);
+  --shadow-md: 0 6px 16px rgba(43, 43, 43, 0.10);
+  --shadow-lg: 0 12px 32px rgba(43, 43, 43, 0.14);
+
+  /* Semantic shadows */
+  --shadow-card: var(--shadow-sm);
+  --shadow-modal: var(--shadow-lg);
+  --shadow-floating-action: var(--shadow-md);
+
+  /* Button heights */
+  --button-height-sm: 2rem;    /* 32px */
+  --button-height-md: 2.5rem;  /* 40px */
+  --button-height-lg: 3.5rem;  /* 56px */
+
+  /* Breakpoints - Bootstrap aligned */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1400px;
+
+  /* Layout widths */
+  --layout-max-width-sm: 420px;
+  --layout-max-width-md: 720px;
+  --layout-max-width-lg: 960px;
+  --layout-max-width-xl: 1120px;
+
+  --layout-auth-width: var(--layout-max-width-sm);
+  --layout-content-width: var(--layout-max-width-xl);
+  --layout-readable-width: var(--layout-max-width-md);
 }

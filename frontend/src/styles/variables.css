@@ -95,4 +95,57 @@
   --font-weight-label: var(--font-weight-medium);
   --font-weight-button: var(--font-weight-bold);
   --font-weight-title: var(--font-weight-bold);
+
+  /* Spacing scale */
+  --space-2xs: 0.25rem;  /* 4px */
+  --space-xs: 0.5rem;    /* 8px */
+  --space-sm: 0.75rem;   /* 12px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.25rem;   /* 20px */
+  --space-xl: 1.5rem;    /* 24px */
+  --space-2xl: 2rem;     /* 32px */
+  --space-3xl: 2.5rem;   /* 40px */
+  --space-4xl: 3rem;     /* 48px */
+
+  /* Layout spacing */
+  --space-page-x-mobile: var(--space-md);    /* 16px */
+  --space-page-x-tablet: var(--space-xl);    /* 24px */
+  --space-page-x-desktop: var(--space-2xl);  /* 32px */
+  --space-section-gap: var(--space-2xl);
+  --space-section-gap-lg: var(--space-3xl);
+
+  /* Component padding */
+  --space-card-padding: var(--space-md);       /* 16px */
+  --space-card-padding-lg: var(--space-2xl);   /* 32px */
+  --space-demo-card-padding: 2.1875rem;        /* 35px */
+  --space-bowl-card-x: 1.125rem;               /* 18px */
+  --space-bowl-card-y: var(--space-2xl);       /* 32px */
+  --space-form-card-x: var(--space-md);        /* 16px */
+  --space-form-card-y: var(--space-xl);        /* 24px */
+  --space-ingredient-card-x: var(--space-xs);  /* 8px */
+  --space-ingredient-card-y: 1.125rem;         /* 18px */
+
+  /* Gaps */
+  --space-field-gap: var(--space-md);   /* 16px */
+  --space-chip-gap: var(--space-xs);    /* 8px */
+  --space-button-gap: var(--space-sm);  /* 12px */
+
+  /* Button padding */
+  --button-padding-y-sm: 0.5625rem;      /* 9px */
+  --button-padding-x-sm: var(--space-sm); /* 12px */
+  --button-padding-y-md: var(--space-sm); /* 12px */
+  --button-padding-x-md: var(--space-md); /* 16px */
+  --button-padding-y-lg: var(--space-lg); /* 20px */
+  --button-padding-x-lg: var(--space-xl); /* 24px */
+
+  /* Radius */
+  --radius-sm: 0.5rem;   /* 8px */
+  --radius-md: 1.25rem;  /* 20px */
+  --radius-lg: 2.5rem;   /* 40px */
+  --radius-button: var(--radius-sm);
+  --radius-card: var(--radius-sm);
+  --radius-demo-card: var(--radius-md);
+  --radius-bowl-card: var(--radius-lg);
+  --radius-modal: var(--radius-sm);
+  --radius-ingredient-card: var(--radius-sm);
 }

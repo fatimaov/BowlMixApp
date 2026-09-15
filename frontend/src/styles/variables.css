@@ -180,4 +180,10 @@
   --layout-auth-width: var(--layout-max-width-sm);
   --layout-content-width: var(--layout-max-width-xl);
   --layout-readable-width: var(--layout-max-width-md);
+
+  /* Logo sizes */
+  --logo-vertical-tagline-height-mobile: 12.1875rem; /* 195px */
+  --logo-horizontal-height-mobile: 2.1875rem;        /* 35px */
+  --logo-vertical-tagline-height-desktop: 14rem;      /* 224px - provisional */
+  --logo-horizontal-height-desktop: 2.5rem;           /* 40px - provisional */
 }

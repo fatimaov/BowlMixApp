@@ -62,4 +62,37 @@
 
   --color-category-extras: #98D2D4;
   --color-category-extras-soft: #D6EDEE;
+
+  /* Font family */
+  --font-family-base: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* Font sizes */
+  --font-size-xs: 0.625rem;   /* 10px - helper text */
+  --font-size-sm: 0.75rem;    /* 12px - small buttons */
+  --font-size-base: 0.875rem; /* 14px - body, labels, inputs, chips */
+  --font-size-md: 1rem;       /* 16px - section titles, main buttons */
+  --font-size-lg: 1.25rem;    /* 20px - bowl/card titles */
+  --font-size-xl: 1.5rem;     /* 24px - page titles */
+
+  /* Semantic typography */
+  --text-page-title: var(--font-size-xl);
+  --text-section-title: var(--font-size-md);
+  --text-card-title: var(--font-size-lg);
+  --text-body: var(--font-size-base);
+  --text-helper: var(--font-size-xs);
+  --text-button: var(--font-size-md);
+  --text-button-sm: var(--font-size-sm);
+  --text-chip: var(--font-size-base);
+  --text-input: var(--font-size-base);
+  --text-label: var(--font-size-base);
+
+  --font-weight-body: var(--font-weight-regular);
+  --font-weight-label: var(--font-weight-medium);
+  --font-weight-button: var(--font-weight-bold);
+  --font-weight-title: var(--font-weight-bold);
 }

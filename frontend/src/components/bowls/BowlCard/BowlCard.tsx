@@ -7,8 +7,11 @@ export type BowlCardProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
 }
 
 /*
- * Future implementation: display generated or saved bowl names, fingerprints,
- * grouped ingredients, and actions that vary by bowl mode.
+ * BowlCard should stay mostly visual. Future props will drive rendering of the
+ * bowl name, fingerprint, ingredients, save/edit UI, saving state, saved
+ * overlay, and errors. It should not own API request logic and should support
+ * non-interactive Public Demo display through props such as canEditName and
+ * canSave.
  */
 function BowlCard({ className, title: _title, ...cardProps }: BowlCardProps) {
   const classNames = [styles.placeholder, className].filter(Boolean).join(' ')

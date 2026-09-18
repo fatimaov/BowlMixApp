@@ -1,16 +1,41 @@
 # BowlMix Frontend
 
-React + TypeScript + Vite frontend for BowlMix. It uses React Router, Bootstrap 5, Bootstrap Icons, CSS Modules, and shared design tokens.
+React + TypeScript + Vite frontend for BowlMix. The frontend owns the application shell, client-side routing, shared UI components, and page layouts. It does not serve the backend API.
 
-## Current implementation
+The frontend app is available at [https://bowlmix-app.vercel.app/](https://bowlmix-app.vercel.app/).
 
-- Landing page with BowlMix branding and links to the demo, signup, and login flows.
-- Public demo page with an app header, content-card placeholder, generate action, and bowl image.
-- Basic login and signup page shells with navigation between them.
-- Protected `/app/*` routes using the temporary `bowlmix_user_token` local-storage check.
-- Route placeholders for the generator dashboard, My Ingredients, Saved Bowls, Profile, and 404 pages.
-- Component scaffolding for buttons, headers, logos, cards, loading/error states, ingredient management, bowl results, and generator workflows.
-- Shared color, typography, spacing, layout, and breakpoint tokens in `src/styles/variables.css`.
+Current route coverage includes the landing page, public demo, authentication page shells, protected application routes, and a 404 page. Most page bodies, API integration, authentication behavior, and data behavior are still being implemented.
+
+## Features
+
+- Vite app shell with responsive styling and shared navigation.
+- React Router route definitions for public and protected pages.
+- Temporary protected-route check using the `bowlmix_user_token` local-storage value.
+- Bootstrap 5, Bootstrap Icons, CSS Modules, and shared design tokens.
+- Reusable component scaffolding for bowls, ingredients, generator workflows, modals, loading states, and error states.
+
+## Requirements
+
+- Node.js 22.20.0
+- npm
+
+## Setup
+
+Run commands from `frontend/`.
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Start the frontend:
+
+```bash
+npm run dev
+```
+
+The default local URL is `http://localhost:5173`.
 
 ## Routes
 
@@ -18,20 +43,20 @@ React + TypeScript + Vite frontend for BowlMix. It uses React Router, Bootstrap 
 | --- | --- |
 | `/` | Landing page |
 | `/demo` | Public demo |
-| `/login` | Login shell |
-| `/signup` | Signup shell |
+| `/login` | Login |
+| `/signup` | Sign up |
 | `/app/generator-dashboard` | Protected generator dashboard |
 | `/app/my-ingredients` | Protected ingredient management |
 | `/app/saved-bowls` | Protected saved bowls |
 | `/app/profile` | Protected profile |
 
-Most authenticated pages and shared components are currently visual placeholders awaiting their full interaction and data behavior.
+## Common Commands
 
-## Scripts
+Run from `frontend/`.
 
 ```bash
-npm run dev      # start the development server
-npm run build    # create a production build
-npm run preview  # preview the production build
-npm run lint     # run Oxlint
+npm run dev
+npm run build
+npm run preview
+npm run lint
 ```

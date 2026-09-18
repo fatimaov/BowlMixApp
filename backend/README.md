@@ -27,9 +27,19 @@ Current route coverage includes public demo generation, auth, categories, authen
 
 ## Requirements
 
-- Python 3.13
-- Pipenv
+- Python 3.13 (the expected version is documented in `.python-version`)
+- Pipenv (the backend package and virtual-environment tool; dependencies are locked in `Pipfile.lock`)
 - PostgreSQL
+- `pyenv` is optional but recommended for installing and switching to the project Python version.
+
+If you use `pyenv`, run these commands from `backend/`:
+
+```bash
+pyenv install 3.13.0  # Run this only if the version is not installed yet.
+pyenv local            # Uses the version in .python-version for this project.
+```
+
+If you do not use `pyenv`, manually install the Python version specified in `.python-version`.
 
 ## Environment Variables
 

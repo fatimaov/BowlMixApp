@@ -16,8 +16,18 @@ Current route coverage includes the landing page, public demo, authentication pa
 
 ## Requirements
 
-- Node.js 22.20.0
-- npm
+- Node.js 22.20.0 (the expected version is documented in `.nvmrc`)
+- npm (the frontend package manager; dependencies are locked in `package-lock.json`)
+- `nvm` is optional but recommended for installing and switching to the project Node.js version
+
+If you use `nvm`, run these commands from `frontend/`:
+
+```bash
+nvm install
+nvm use
+```
+
+If you do not use `nvm`, manually install the Node.js version specified in `.nvmrc`.
 
 ## Setup
 

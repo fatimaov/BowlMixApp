@@ -1,10 +1,16 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import LoadingState from '../components/LoadingState'
+import { useAuth } from '../context/auth/useAuth'
 
 function ProtectedRoute() {
   const location = useLocation()
-  const token = window.localStorage.getItem('bowlmix_user_token')
+  const { isAuthenticated, isLoading } = useAuth()
 
-  if (!token) {
+  if (isLoading) {
+    return <LoadingState aria-label="Checking authentication" />
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace state={{ from: location }} />
   }
 

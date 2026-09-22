@@ -1,2 +1,2 @@
-// Will hold AuthContext and AuthProvider, connecting authReducer and exposing auth state and actions.
+// Will hold auth/session context and provider state for tokens, the current user, and auth actions.
 export {};

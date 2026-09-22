@@ -1,2 +1,2 @@
-// Will expose a safe custom hook for consuming AuthContext from components.
+// Will expose a custom hook for consuming auth/session state and actions from components.
 export {};

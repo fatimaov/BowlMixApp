@@ -1,2 +1,2 @@
-// Will hold the initial auth state and reducer cases for authentication and session updates.
+// Will hold initial auth state and reducer cases for login, logout, session restore, and user updates.
 export {};

@@ -1,2 +1,2 @@
-// Will define types for the current user, auth state and actions, login payloads, and AuthContext value.
+// Will define types for the session token, current user, auth state, payloads, and context value.
 export {};

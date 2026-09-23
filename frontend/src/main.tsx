@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
 import { AuthProvider } from './context/auth/AuthContext'
 import { CategoriesProvider } from './context/categories/CategoriesContext'
+import { UserIngredientsProvider } from './context/userIngredients/UserIngredientsContext'
 import './styles/variables.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
@@ -21,7 +22,9 @@ createRoot(rootElement).render(
   <StrictMode>
     <CategoriesProvider>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <UserIngredientsProvider>
+          <RouterProvider router={router} />
+        </UserIngredientsProvider>
       </AuthProvider>
     </CategoriesProvider>
   </StrictMode>,

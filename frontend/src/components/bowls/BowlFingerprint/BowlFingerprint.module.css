@@ -1,1 +1,68 @@
-/* Component-specific styles will be added later. */
+/* Fingerprint visual system. */
+
+/* Visual patterns returned by the backend. */
+.fingerprint-pattern-solid {
+  /* TODO: define solid pattern styling. */
+}
+
+.fingerprint-pattern-dots {
+  /* TODO: define dots pattern styling. */
+}
+
+.fingerprint-pattern-stripes {
+  /* TODO: define stripes pattern styling. */
+}
+
+.fingerprint-pattern-grid {
+  /* TODO: define grid pattern styling. */
+}
+
+.fingerprint-pattern-speckled {
+  /* TODO: define speckled pattern styling. */
+}
+
+.fingerprint-pattern-ring {
+  /* TODO: define ring pattern styling. */
+}
+
+.fingerprint-pattern-split {
+  /* TODO: define split pattern styling. */
+}
+
+/* Category shape families returned by the backend. */
+.fingerprint-shape-grains {
+  /* TODO: define grains shape styling. */
+}
+
+.fingerprint-shape-blocks {
+  /* TODO: define blocks shape styling. */
+}
+
+.fingerprint-shape-blobs {
+  /* TODO: define blobs shape styling. */
+}
+
+.fingerprint-shape-tokens {
+  /* TODO: define tokens shape styling. */
+}
+
+.fingerprint-shape-flakes {
+  /* TODO: define flakes shape styling. */
+}
+
+.fingerprint-shape-drizzles {
+  /* TODO: define drizzles shape styling. */
+}
+
+.fingerprint-shape-sparks {
+  /* TODO: define sparks shape styling. */
+}
+
+/* Safe fallbacks for values without a matching frontend rule. */
+.fingerprint-pattern-fallback {
+  /* TODO: define fallback pattern styling. */
+}
+
+.fingerprint-shape-fallback {
+  /* TODO: define fallback shape styling. */
+}

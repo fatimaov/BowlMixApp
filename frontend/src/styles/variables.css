@@ -62,6 +62,16 @@
 
   --color-category-extras: #98D2D4;
   --color-category-extras-soft: #D6EDEE;
+  --color-category-fallback: var(--color-neutral);
+
+  /* Backend category color-key aliases */
+  --cat-bases: var(--color-category-bases);
+  --cat-proteins: var(--color-category-proteins);
+  --cat-vegetables: var(--color-category-vegetables);
+  --cat-toppings: var(--color-category-toppings);
+  --cat-crunch: var(--color-category-crunch);
+  --cat-sauces: var(--color-category-sauces);
+  --cat-extras: var(--color-category-extras);
 
   /* Font family */
   --font-family-base: "Plus Jakarta Sans", system-ui, sans-serif;

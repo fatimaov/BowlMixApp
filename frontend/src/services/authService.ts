@@ -1,11 +1,11 @@
 import type {
+  DeactivateUserPayload,
   LoginPayload,
   LoginResponseData,
   RegisterPayload,
-  DeactivateUserPayload,
   UpdateCurrentUserPayload,
   User,
-} from "../context/auth/authTypes";
+} from "../types/auth";
 
 /**
  * Backend-facing authentication functions.

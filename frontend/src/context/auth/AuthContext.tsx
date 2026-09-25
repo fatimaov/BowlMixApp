@@ -9,9 +9,11 @@ import {
 import { authReducer, initialAuthState } from "./authReducer";
 import type {
   AuthContextValue,
+} from "./authTypes";
+import type {
   DeactivateUserPayload,
   UpdateCurrentUserPayload,
-} from "./authTypes";
+} from "../../types/auth";
 import {
   deactivateCurrentUser,
   getCurrentUser,

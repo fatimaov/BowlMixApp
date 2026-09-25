@@ -1,51 +1,7 @@
-export type ApiError = {
-  code: string;
-  message: string;
-};
-
-export type User = {
-  id: number;
-  username: string;
-  email: string;
-  created_at: string;
-  is_active: boolean;
-};
-
-export type RegisterPayload = {
-  username: string;
-  email: string;
-  password: string;
-};
-
-export type LoginPayload = {
-  email: string;
-  password: string;
-};
-
-export type LoginResponseData = {
-  user: User;
-  access_token: string;
-  token_type: "Bearer";
-};
-
-export type UserResponse = {
-  success: true;
-  data: {
-    user: User;
-  };
-};
-
-export type RegisterResponse = UserResponse;
-
-export type LoginResponse = {
-  success: true;
-  data: LoginResponseData;
-};
-
-export type ApiErrorResponse = {
-  success: false;
-  error: ApiError;
-};
+import type {
+  UpdateCurrentUserPayload,
+  User,
+} from "../../types/auth";
 
 export type AuthState = {
     token: string | null;
@@ -54,17 +10,6 @@ export type AuthState = {
     isLoading: boolean;
     error: string | null;
 }
-
-export type UpdateCurrentUserPayload = {
-  username?: string;
-  email?: string;
-  current_password?: string;
-  new_password?: string;
-};
-
-export type DeactivateUserPayload = {
-  is_active: false;
-};
 
 export type AuthAction =
     | { type: "AUTH_START" }

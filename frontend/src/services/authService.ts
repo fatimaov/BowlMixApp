@@ -7,6 +7,7 @@ import type {
   RegisterResponse,
   UpdateCurrentUserPayload,
   User,
+  UserResponse,
 } from "../types/auth";
 import type { ApiErrorResponse } from "../types/api";
 import { API_BASE_URL } from "../utils/env";
@@ -75,8 +76,32 @@ export async function login(payload: LoginPayload): Promise<LoginResponseData> {
   return responseBody.data;
 }
 
-export async function getCurrentUser(_token: string): Promise<User> {
-  throw new Error("Auth service getCurrentUser is not implemented yet.");
+export async function getCurrentUser(token: string): Promise<User> {
+  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const responseBody = (await response.json().catch(() => null)) as
+    | UserResponse
+    | ApiErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new Error(
+      responseBody && !responseBody.success
+        ? responseBody.error.message
+        : "Unable to retrieve the current user.",
+    );
+  }
+
+  if (!responseBody || !responseBody.success) {
+    throw new Error("Current-user response was invalid.");
+  }
+
+  return responseBody.data.user;
 }
 
 export async function updateCurrentUser(

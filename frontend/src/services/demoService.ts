@@ -1,12 +1,31 @@
-/**
- * Backend-facing public demo functions.
- *
- * Public demo generation is anonymous, does not accept request options, and
- * returns three bowls generated from the backend's default ingredient pool.
- */
-
-import type { DemoGenerateBowlsResponseData } from "../types/bowl";
+import type { ApiErrorResponse } from "../types/api";
+import type {
+  DemoGenerateBowlsResponse,
+  DemoGenerateBowlsResponseData,
+} from "../types/bowl";
+import { API_BASE_URL } from "../utils/env";
 
 export async function generateDemoBowls(): Promise<DemoGenerateBowlsResponseData> {
-  throw new Error("Demo service generateDemoBowls is not implemented yet.");
+  const response = await fetch(`${API_BASE_URL}/demo/bowls/generate`, {
+    method: "POST",
+  });
+
+  const responseBody = (await response.json().catch(() => null)) as
+    | DemoGenerateBowlsResponse
+    | ApiErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new Error(
+      responseBody && !responseBody.success
+        ? responseBody.error.message
+        : "Unable to generate demo bowls.",
+    );
+  }
+
+  if (!responseBody || !responseBody.success) {
+    throw new Error("Demo-bowl response was invalid.");
+  }
+
+  return responseBody.data;
 }

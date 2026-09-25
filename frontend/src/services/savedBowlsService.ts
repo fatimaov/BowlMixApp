@@ -5,25 +5,31 @@
  * create, rename, and soft-delete saved bowls.
  */
 
-type SavedBowl = Record<string, unknown>;
-type SaveBowlPayload = Record<string, unknown>;
+import type {
+  RenameSavedBowlPayload,
+  SaveBowlPayload,
+  SavedBowlResponseData,
+  SavedBowlsResponseData,
+} from "../types/savedBowl";
 
-export async function getSavedBowls(_token: string): Promise<SavedBowl[]> {
+export async function getSavedBowls(
+  _token: string,
+): Promise<SavedBowlsResponseData> {
   throw new Error("Saved bowls service getSavedBowls is not implemented yet.");
 }
 
 export async function saveBowl(
   _token: string,
   _payload: SaveBowlPayload,
-): Promise<SavedBowl> {
+): Promise<SavedBowlResponseData> {
   throw new Error("Saved bowls service saveBowl is not implemented yet.");
 }
 
 export async function renameSavedBowl(
   _token: string,
   _savedBowlId: number,
-  _name: string,
-): Promise<SavedBowl> {
+  _payload: RenameSavedBowlPayload,
+): Promise<SavedBowlResponseData> {
   throw new Error(
     "Saved bowls service renameSavedBowl is not implemented yet.",
   );
@@ -32,7 +38,7 @@ export async function renameSavedBowl(
 export async function deleteSavedBowl(
   _token: string,
   _savedBowlId: number,
-): Promise<void> {
+): Promise<string> {
   throw new Error(
     "Saved bowls service deleteSavedBowl is not implemented yet.",
   );

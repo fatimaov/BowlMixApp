@@ -10,6 +10,11 @@ export type ApiErrorResponse = {
   error: ApiError;
 };
 
+export type ApiSuccessResponse<TData> = {
+  success: true;
+  data: TData;
+};
+
 export type MessageResponse = {
   success: true;
   data: {

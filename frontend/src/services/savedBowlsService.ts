@@ -6,40 +6,153 @@
  */
 
 import type {
+  ApiErrorResponse,
+  MessageResponse,
+} from "../types/api";
+import { API_BASE_URL } from "../utils/env";
+import type {
+  DeleteSavedBowlPayload,
   RenameSavedBowlPayload,
   SaveBowlPayload,
+  SavedBowlResponse,
   SavedBowlResponseData,
+  SavedBowlsResponse,
   SavedBowlsResponseData,
 } from "../types/savedBowl";
 
 export async function getSavedBowls(
-  _token: string,
+  token: string,
 ): Promise<SavedBowlsResponseData> {
-  throw new Error("Saved bowls service getSavedBowls is not implemented yet.");
+  const response = await fetch(`${API_BASE_URL}/saved-bowls`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const responseBody = (await response.json().catch(() => null)) as
+    | SavedBowlsResponse
+    | ApiErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new Error(
+      responseBody && !responseBody.success
+        ? responseBody.error.message
+        : "Unable to load saved bowls.",
+    );
+  }
+
+  if (!responseBody || !responseBody.success) {
+    throw new Error("Saved-bowls response was invalid.");
+  }
+
+  return responseBody.data;
 }
 
 export async function saveBowl(
-  _token: string,
-  _payload: SaveBowlPayload,
+  token: string,
+  payload: SaveBowlPayload,
 ): Promise<SavedBowlResponseData> {
-  throw new Error("Saved bowls service saveBowl is not implemented yet.");
+  const response = await fetch(`${API_BASE_URL}/saved-bowls`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const responseBody = (await response.json().catch(() => null)) as
+    | SavedBowlResponse
+    | ApiErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new Error(
+      responseBody && !responseBody.success
+        ? responseBody.error.message
+        : "Unable to save bowl.",
+    );
+  }
+
+  if (!responseBody || !responseBody.success) {
+    throw new Error("Saved-bowl response was invalid.");
+  }
+
+  return responseBody.data;
 }
 
 export async function renameSavedBowl(
-  _token: string,
-  _savedBowlId: number,
-  _payload: RenameSavedBowlPayload,
+  token: string,
+  savedBowlId: number,
+  payload: RenameSavedBowlPayload,
 ): Promise<SavedBowlResponseData> {
-  throw new Error(
-    "Saved bowls service renameSavedBowl is not implemented yet.",
+  const response = await fetch(
+    `${API_BASE_URL}/saved-bowls/${savedBowlId}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    },
   );
+
+  const responseBody = (await response.json().catch(() => null)) as
+    | SavedBowlResponse
+    | ApiErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new Error(
+      responseBody && !responseBody.success
+        ? responseBody.error.message
+        : "Unable to rename saved bowl.",
+    );
+  }
+
+  if (!responseBody || !responseBody.success) {
+    throw new Error("Saved-bowl rename response was invalid.");
+  }
+
+  return responseBody.data;
 }
 
 export async function deleteSavedBowl(
-  _token: string,
-  _savedBowlId: number,
+  token: string,
+  savedBowlId: number,
 ): Promise<string> {
-  throw new Error(
-    "Saved bowls service deleteSavedBowl is not implemented yet.",
+  const payload: DeleteSavedBowlPayload = { deleted_at: true };
+  const response = await fetch(
+    `${API_BASE_URL}/saved-bowls/${savedBowlId}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    },
   );
+
+  const responseBody = (await response.json().catch(() => null)) as
+    | MessageResponse
+    | ApiErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new Error(
+      responseBody && !responseBody.success
+        ? responseBody.error.message
+        : "Unable to delete saved bowl.",
+    );
+  }
+
+  if (!responseBody || !responseBody.success) {
+    throw new Error("Saved-bowl deletion response was invalid.");
+  }
+
+  return responseBody.data.message;
 }

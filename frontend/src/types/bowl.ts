@@ -45,9 +45,11 @@ export type DemoGenerateBowlsPayload = Record<string, never>;
 
 export type BowlResponse = {
   success: true;
-  data: {
-    bowl: Bowl;
-  };
+  data: BowlResponseData;
+};
+
+export type BowlResponseData = {
+  bowl: Bowl;
 };
 
 export type BowlsResponseData = {

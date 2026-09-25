@@ -12,8 +12,8 @@ import {
 } from "./categoriesReducer";
 import type {
   CategoriesContextValue,
-  Category,
 } from "./categoriesTypes";
+import type { Category } from "../../types/category";
 import { getCategories as getCategoriesRequest } from "../../services/categoriesService";
 
 export const CategoriesContext = createContext<
@@ -35,7 +35,13 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
 
     try {
       const result = await getCategoriesRequest();
-      dispatch({ type: "CATEGORIES_SUCCESS", payload: result });
+      dispatch({
+        type: "CATEGORIES_SUCCESS",
+        payload: {
+          categories: result.categories,
+          visualPatterns: result.visual_patterns,
+        },
+      });
     } catch (error) {
       dispatch({
         type: "CATEGORIES_ERROR",

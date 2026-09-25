@@ -1,17 +1,4 @@
-export type CategoryColorKey = string;
-
-export type ShapeFamily = string;
-
-export type VisualPattern = string;
-
-export type Category = {
-  id: number;
-  name: string;
-  slug: string;
-  color_key: CategoryColorKey;
-  shape_family: ShapeFamily;
-  sort_order: number;
-};
+import type { Category, VisualPattern } from "../../types/category";
 
 export type CategoriesState = {
   categories: Category[];

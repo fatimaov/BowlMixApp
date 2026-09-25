@@ -7,7 +7,11 @@ import {
   type ReactNode,
 } from "react";
 import { authReducer, initialAuthState } from "./authReducer";
-import type { AuthContextValue, UpdateCurrentUserPayload } from "./authTypes";
+import type {
+  AuthContextValue,
+  DeactivateUserPayload,
+  UpdateCurrentUserPayload,
+} from "./authTypes";
 import {
   deactivateCurrentUser,
   getCurrentUser,
@@ -102,7 +106,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     dispatch({ type: "AUTH_START" });
 
     try {
-      await deactivateCurrentUser(state.token);
+      const payload: DeactivateUserPayload = { is_active: false };
+      await deactivateCurrentUser(state.token, payload);
       localStorage.removeItem(TOKEN_STORAGE_KEY);
       dispatch({ type: "DELETE_CURRENT_USER" });
     } catch (error) {

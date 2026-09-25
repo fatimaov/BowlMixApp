@@ -2,6 +2,7 @@ import type {
   LoginPayload,
   LoginResponseData,
   RegisterPayload,
+  DeactivateUserPayload,
   UpdateCurrentUserPayload,
   User,
 } from "../context/auth/authTypes";
@@ -31,6 +32,9 @@ export async function updateCurrentUser(
   throw new Error("Auth service updateCurrentUser is not implemented yet.");
 }
 
-export async function deactivateCurrentUser(_token: string): Promise<void> {
+export async function deactivateCurrentUser(
+  _token: string,
+  _payload: DeactivateUserPayload,
+): Promise<void> {
   throw new Error("Auth service deactivateCurrentUser is not implemented yet.");
 }

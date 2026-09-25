@@ -1,6 +1,7 @@
 import type {
   DeactivateUserPayload,
   LoginPayload,
+  LoginResponse,
   LoginResponseData,
   RegisterPayload,
   RegisterResponse,
@@ -45,8 +46,33 @@ export async function register(payload: RegisterPayload): Promise<User> {
   return responseBody.data.user;
 }
 
-export async function login(_payload: LoginPayload): Promise<LoginResponseData> {
-  throw new Error("Auth service login is not implemented yet.");
+export async function login(payload: LoginPayload): Promise<LoginResponseData> {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const responseBody = (await response.json().catch(() => null)) as
+    | LoginResponse
+    | ApiErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new Error(
+      responseBody && !responseBody.success
+        ? responseBody.error.message
+        : "Unable to log in.",
+    );
+  }
+
+  if (!responseBody || !responseBody.success) {
+    throw new Error("Login response was invalid.");
+  }
+
+  return responseBody.data;
 }
 
 export async function getCurrentUser(_token: string): Promise<User> {

@@ -1,11 +1,3 @@
-/**
- * Backend-facing bowl generation functions.
- *
- * Build Mode returns one bowl from explicit ingredient selections. Generate
- * Mode returns three bowls from optional locked and excluded ingredients.
- * Regeneration reuses the Generate Mode request with the latest constraints.
- */
-
 import type { ApiErrorResponse } from "../types/api";
 import { API_BASE_URL } from "../utils/env";
 import type {

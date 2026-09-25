@@ -6,13 +6,6 @@ import type {
   PairingSuggestionsResponseData,
 } from "../types/pairingSuggestion";
 
-/**
- * Backend-facing AI pairing-suggestion functions for Build Mode.
- *
- * Suggestions are requested for one target category using the ingredients
- * currently selected in the bowl as context.
- */
-
 export async function getPairingSuggestions(
   token: string,
   payload: PairingSuggestionsPayload,

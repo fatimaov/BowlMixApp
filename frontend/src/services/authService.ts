@@ -12,12 +12,6 @@ import type {
 import type { ApiErrorResponse, MessageResponse } from "../types/api";
 import { API_BASE_URL } from "../utils/env";
 
-/**
- * Backend-facing authentication functions.
- *
- * AuthContext and registration UI use these functions to keep HTTP details
- * outside of components and state-management code.
- */
 export async function register(payload: RegisterPayload): Promise<User> {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
     method: "POST",

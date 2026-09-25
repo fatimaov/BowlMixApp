@@ -11,7 +11,6 @@ import type {
   AuthContextValue,
 } from "./authTypes";
 import type {
-  DeactivateUserPayload,
   UpdateCurrentUserPayload,
 } from "../../types/auth";
 import {
@@ -102,21 +101,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const deleteCurrentUser = useCallback(async () => {
     if (!state.token) {
       dispatch({ type: "AUTH_ERROR", payload: "Authentication is required." });
-      return;
+      return null;
     }
 
     dispatch({ type: "AUTH_START" });
 
     try {
-      const payload: DeactivateUserPayload = { is_active: false };
-      await deactivateCurrentUser(state.token, payload);
+      const message = await deactivateCurrentUser(state.token);
       localStorage.removeItem(TOKEN_STORAGE_KEY);
       dispatch({ type: "DELETE_CURRENT_USER" });
+      return message;
     } catch (error) {
       dispatch({
         type: "AUTH_ERROR",
         payload: error instanceof Error ? error.message : "Unable to delete account.",
       });
+      return null;
     }
   }, [state.token]);
 

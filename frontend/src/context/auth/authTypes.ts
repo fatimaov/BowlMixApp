@@ -24,5 +24,5 @@ export type AuthContextValue = AuthState & {
     logout: () => void;
     restoreSession: () => Promise<void>;
     updateCurrentUser: (payload: UpdateCurrentUserPayload) => Promise<void>;
-    deleteCurrentUser: () => Promise<void>;
+    deleteCurrentUser: () => Promise<string | null>;
 }

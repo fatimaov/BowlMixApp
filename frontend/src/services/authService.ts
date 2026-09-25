@@ -9,7 +9,7 @@ import type {
   User,
   UserResponse,
 } from "../types/auth";
-import type { ApiErrorResponse } from "../types/api";
+import type { ApiErrorResponse, MessageResponse } from "../types/api";
 import { API_BASE_URL } from "../utils/env";
 
 /**
@@ -105,15 +105,68 @@ export async function getCurrentUser(token: string): Promise<User> {
 }
 
 export async function updateCurrentUser(
-  _token: string,
-  _payload: UpdateCurrentUserPayload,
+  token: string,
+  payload: UpdateCurrentUserPayload,
 ): Promise<User> {
-  throw new Error("Auth service updateCurrentUser is not implemented yet.");
+  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const responseBody = (await response.json().catch(() => null)) as
+    | UserResponse
+    | ApiErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new Error(
+      responseBody && !responseBody.success
+        ? responseBody.error.message
+        : "Unable to update the current user.",
+    );
+  }
+
+  if (!responseBody || !responseBody.success) {
+    throw new Error("Current-user update response was invalid.");
+  }
+
+  return responseBody.data.user;
 }
 
 export async function deactivateCurrentUser(
-  _token: string,
-  _payload: DeactivateUserPayload,
-): Promise<void> {
-  throw new Error("Auth service deactivateCurrentUser is not implemented yet.");
+  token: string,
+): Promise<string> {
+  const payload: DeactivateUserPayload = { is_active: false };
+
+  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const responseBody = (await response.json().catch(() => null)) as
+    | MessageResponse
+    | ApiErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new Error(
+      responseBody && !responseBody.success
+        ? responseBody.error.message
+        : "Unable to deactivate the current user.",
+    );
+  }
+
+  if (!responseBody || !responseBody.success) {
+    throw new Error("Account deactivation response was invalid.");
+  }
+
+  return responseBody.data.message;
 }

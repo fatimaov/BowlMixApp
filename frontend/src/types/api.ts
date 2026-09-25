@@ -9,3 +9,10 @@ export type ApiErrorResponse = {
   success: false;
   error: ApiError;
 };
+
+export type MessageResponse = {
+  success: true;
+  data: {
+    message: string;
+  };
+};

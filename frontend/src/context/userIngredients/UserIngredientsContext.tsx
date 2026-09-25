@@ -15,8 +15,8 @@ import type {
   CreateIngredientPayload,
   RenameIngredientPayload,
   UpdateAvailabilityPayload,
-  UserIngredientsContextValue,
-} from "./userIngredientsTypes";
+} from "../../types/ingredient";
+import type { UserIngredientsContextValue } from "./userIngredientsTypes";
 import {
   createIngredient as createIngredientRequest,
   deleteIngredient as deleteIngredientRequest,

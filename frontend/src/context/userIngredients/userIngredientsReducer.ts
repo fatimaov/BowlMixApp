@@ -2,6 +2,8 @@ import type {
   IngredientAvailability,
   IngredientManagement,
   IngredientSelectorOption,
+} from "../../types/ingredient";
+import type {
   UserIngredientsAction,
   UserIngredientsState,
 } from "./userIngredientsTypes";

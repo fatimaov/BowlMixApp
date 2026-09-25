@@ -5,7 +5,7 @@ import type {
   IngredientSelectorOption,
   RenameIngredientPayload,
   UpdateAvailabilityPayload,
-} from "../context/userIngredients/userIngredientsTypes";
+} from "../types/ingredient";
 
 export async function getIngredients(
   _token: string,

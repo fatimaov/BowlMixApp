@@ -1,53 +1,11 @@
-export type IngredientCategorySummary = {
-  id: number;
-  name: string;
-  slug: string;
-  sort_order: number;
-};
-
-export type IngredientBase = {
-  id: number;
-  name: string;
-  category: IngredientCategorySummary;
-  is_default: boolean;
-  is_active: boolean;
-  is_available: boolean;
-  visual_pattern: string;
-};
-
-export type IngredientManagement = IngredientBase & {
-  can_edit: boolean;
-  can_delete: boolean;
-  can_toggle_availability: boolean;
-};
-
-export type IngredientSelectorOption = IngredientBase & {
-  can_toggle_availability: boolean;
-  selectable: boolean;
-};
-
-export type Ingredient = IngredientManagement;
-
-export type CreateIngredientPayload = {
-  name: string;
-  category_id: number;
-  is_available?: boolean;
-};
-
-export type RenameIngredientPayload = {
-  name: string;
-};
-
-export type UpdateAvailabilityPayload = {
-  is_available: boolean;
-};
-
-export type IngredientAvailability = {
-  ingredient_id: number;
-  user_id: number;
-  is_available: boolean;
-  selectable: boolean;
-};
+import type {
+  CreateIngredientPayload,
+  IngredientAvailability,
+  IngredientManagement,
+  IngredientSelectorOption,
+  RenameIngredientPayload,
+  UpdateAvailabilityPayload,
+} from "../../types/ingredient";
 
 export type UserIngredientsState = {
   ingredients: IngredientManagement[];

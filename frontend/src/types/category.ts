@@ -15,6 +15,13 @@ export type Category = {
   sort_order: number;
 };
 
+export type IngredientCategorySummary = {
+  id: number;
+  name: string;
+  slug: string;
+  sort_order: number;
+};
+
 export type CategoriesResponseData = {
   categories: Category[];
   visual_patterns: VisualPattern[];

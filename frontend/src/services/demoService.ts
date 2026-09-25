@@ -5,8 +5,8 @@
  * returns three bowls generated from the backend's default ingredient pool.
  */
 
-type Bowl = Record<string, unknown>;
+import type { DemoGenerateBowlsResponseData } from "../types/bowl";
 
-export async function generateDemoBowls(): Promise<Bowl[]> {
+export async function generateDemoBowls(): Promise<DemoGenerateBowlsResponseData> {
   throw new Error("Demo service generateDemoBowls is not implemented yet.");
 }

@@ -66,5 +66,5 @@ export type UserIngredientsContextValue = UserIngredientsState & {
     ingredientId: number,
     payload: UpdateAvailabilityPayload,
   ) => Promise<void>;
-  deleteIngredient: (ingredientId: number) => Promise<void>;
+  deleteIngredient: (ingredientId: number) => Promise<string | null>;
 };

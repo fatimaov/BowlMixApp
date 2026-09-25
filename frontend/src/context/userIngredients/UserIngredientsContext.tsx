@@ -241,14 +241,15 @@ export function UserIngredientsProvider({
     async (ingredientId: number) => {
       if (!token) {
         dispatch({ type: "MUTATION_ERROR", payload: "Authentication is required." });
-        return;
+        return null;
       }
 
       dispatch({ type: "MUTATION_START" });
 
       try {
-        await deleteIngredientRequest(token, ingredientId);
+        const message = await deleteIngredientRequest(token, ingredientId);
         dispatch({ type: "DELETE_INGREDIENT_SUCCESS", payload: ingredientId });
+        return message;
       } catch (error) {
         dispatch({
           type: "MUTATION_ERROR",
@@ -257,6 +258,7 @@ export function UserIngredientsProvider({
               ? error.message
               : "Unable to delete ingredient.",
         });
+        return null;
       }
     },
     [token],

@@ -1,10 +1,3 @@
-/**
- * Backend-facing saved-bowl functions.
- *
- * Saved bowls are immutable ingredient snapshots. The frontend can list,
- * create, rename, and soft-delete saved bowls.
- */
-
 import type {
   ApiErrorResponse,
   MessageResponse,

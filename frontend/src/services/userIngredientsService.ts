@@ -7,12 +7,6 @@ import type {
   UpdateAvailabilityPayload,
 } from "../context/userIngredients/userIngredientsTypes";
 
-/**
- * Backend-facing user-ingredient functions.
- *
- * The HTTP implementation will be added here later. The context only
- * coordinates authentication, reducer state, and successful responses.
- */
 export async function getIngredients(
   _token: string,
 ): Promise<IngredientManagement[]> {

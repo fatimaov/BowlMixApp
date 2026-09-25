@@ -1,32 +1,11 @@
-import type { ApiErrorResponse } from "../types/api";
-import { API_BASE_URL } from "../utils/env";
-import type {
-  CategoriesResponse,
-  CategoriesResponseData,
-} from "../types/category";
+import type { CategoriesResponseData } from "../types/category";
+import { apiRequest } from "./apiClient";
 
 
 export async function getCategories(): Promise<CategoriesResponseData> {
-  const response = await fetch(`${API_BASE_URL}/categories`, {
+  return apiRequest<CategoriesResponseData>("/categories", {
     method: "GET",
+    errorMessage: "Unable to load categories.",
+    invalidResponseMessage: "Categories response was invalid.",
   });
-
-  const responseBody = (await response.json().catch(() => null)) as
-    | CategoriesResponse
-    | ApiErrorResponse
-    | null;
-
-  if (!response.ok) {
-    throw new Error(
-      responseBody && !responseBody.success
-        ? responseBody.error.message
-        : "Unable to load categories.",
-    );
-  }
-
-  if (!responseBody || !responseBody.success) {
-    throw new Error("Categories response was invalid.");
-  }
-
-  return responseBody.data;
 }

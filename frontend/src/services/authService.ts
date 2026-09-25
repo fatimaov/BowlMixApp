@@ -1,134 +1,52 @@
 import type {
   DeactivateUserPayload,
   LoginPayload,
-  LoginResponse,
   LoginResponseData,
   RegisterPayload,
-  RegisterResponse,
   UpdateCurrentUserPayload,
   User,
-  UserResponse,
 } from "../types/auth";
-import type { ApiErrorResponse, MessageResponse } from "../types/api";
-import { API_BASE_URL } from "../utils/env";
+import type { MessageResponse } from "../types/api";
+import { apiRequest } from "./apiClient";
 
 export async function register(payload: RegisterPayload): Promise<User> {
-  const response = await fetch(`${API_BASE_URL}/auth/register`, {
+  return apiRequest<User>("/auth/register", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
+    body: payload,
+    errorMessage: "Unable to register user.",
+    invalidResponseMessage: "Registration response was invalid.",
   });
-
-  const responseBody = (await response.json().catch(() => null)) as
-    | RegisterResponse
-    | ApiErrorResponse
-    | null;
-
-  if (!response.ok) {
-    throw new Error(
-      responseBody && !responseBody.success
-        ? responseBody.error.message
-        : "Unable to register user.",
-    );
-  }
-
-  if (!responseBody || !responseBody.success) {
-    throw new Error("Registration response was invalid.");
-  }
-
-  return responseBody.data.user;
 }
 
 export async function login(payload: LoginPayload): Promise<LoginResponseData> {
-  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+  return apiRequest<LoginResponseData>("/auth/login", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
+    body: payload,
+    errorMessage: "Unable to log in.",
+    invalidResponseMessage: "Login response was invalid.",
   });
-
-  const responseBody = (await response.json().catch(() => null)) as
-    | LoginResponse
-    | ApiErrorResponse
-    | null;
-
-  if (!response.ok) {
-    throw new Error(
-      responseBody && !responseBody.success
-        ? responseBody.error.message
-        : "Unable to log in.",
-    );
-  }
-
-  if (!responseBody || !responseBody.success) {
-    throw new Error("Login response was invalid.");
-  }
-
-  return responseBody.data;
 }
 
 export async function getCurrentUser(token: string): Promise<User> {
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+  return apiRequest<User>("/auth/me", {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    token,
+    errorMessage: "Unable to retrieve the current user.",
+    invalidResponseMessage: "Current-user response was invalid.",
   });
-
-  const responseBody = (await response.json().catch(() => null)) as
-    | UserResponse
-    | ApiErrorResponse
-    | null;
-
-  if (!response.ok) {
-    throw new Error(
-      responseBody && !responseBody.success
-        ? responseBody.error.message
-        : "Unable to retrieve the current user.",
-    );
-  }
-
-  if (!responseBody || !responseBody.success) {
-    throw new Error("Current-user response was invalid.");
-  }
-
-  return responseBody.data.user;
 }
 
 export async function updateCurrentUser(
   token: string,
   payload: UpdateCurrentUserPayload,
 ): Promise<User> {
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+  return apiRequest<User>("/auth/me", {
     method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
+    token,
+    body: payload,
+    errorMessage: "Unable to update the current user.",
+    invalidResponseMessage: "Current-user update response was invalid.",
   });
-
-  const responseBody = (await response.json().catch(() => null)) as
-    | UserResponse
-    | ApiErrorResponse
-    | null;
-
-  if (!response.ok) {
-    throw new Error(
-      responseBody && !responseBody.success
-        ? responseBody.error.message
-        : "Unable to update the current user.",
-    );
-  }
-
-  if (!responseBody || !responseBody.success) {
-    throw new Error("Current-user update response was invalid.");
-  }
-
-  return responseBody.data.user;
 }
 
 export async function deactivateCurrentUser(
@@ -136,31 +54,13 @@ export async function deactivateCurrentUser(
 ): Promise<string> {
   const payload: DeactivateUserPayload = { is_active: false };
 
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+  const responseData = await apiRequest<MessageResponse["data"]>("/auth/me", {
     method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
+    token,
+    body: payload,
+    errorMessage: "Unable to deactivate the current user.",
+    invalidResponseMessage: "Account deactivation response was invalid.",
   });
 
-  const responseBody = (await response.json().catch(() => null)) as
-    | MessageResponse
-    | ApiErrorResponse
-    | null;
-
-  if (!response.ok) {
-    throw new Error(
-      responseBody && !responseBody.success
-        ? responseBody.error.message
-        : "Unable to deactivate the current user.",
-    );
-  }
-
-  if (!responseBody || !responseBody.success) {
-    throw new Error("Account deactivation response was invalid.");
-  }
-
-  return responseBody.data.message;
+  return responseData.message;
 }

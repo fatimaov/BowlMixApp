@@ -24,7 +24,7 @@ It also includes user accounts, ingredient availability management, saved bowls,
 
 ## Tech Stack
 
-- Frontend: React, Vite, JavaScript, Bootstrap
+- Frontend: React, Vite, TypeScript, Bootstrap
 - Backend: Python, Flask, Flask-JWT-Extended, Flask-SQLAlchemy
 - Database: PostgreSQL
 - AI: Gemini or local LM Studio through a backend-only provider layer
